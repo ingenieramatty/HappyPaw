@@ -6,10 +6,10 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
 import type { Route } from "./+types/root";
 import "./app.css";
 
+// Definición de enlaces para fuentes externas
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -19,10 +19,12 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap",
   },
+  { rel: "icon", href: "../public/favicon.ico", type: "image/x-icon" },
 ];
 
+// Componente Layout para la estructura básica de la aplicación
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -41,10 +43,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Componente principal de la aplicación
 export default function App() {
-  return <Outlet />;
+  return (
+    <div className="bg-slate-100 h-full w-full flex flex-col">
+      <div className="p-10">
+      <img
+        src="../public/logo.png"
+        alt="Logo de la aplicación"
+        className="h-auto mx-auto w-24 "
+        onError={(e) => {
+          e.currentTarget.src = "/fallback-image.jpg";
+        }}
+      />
+      </div>
+      <Outlet />
+    </div>
+  );
 }
 
+// Componente ErrorBoundary para manejar errores
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
@@ -63,7 +81,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
+      <h1 className="text-9xl">{message}</h1>
       <p>{details}</p>
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">

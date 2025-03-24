@@ -1,13 +1,18 @@
+import useQueryParams from "~/hooks/useQueryParams";
+import HomePage from "~/presentation/pages/home_page";
+import ShowPetPage from "~/presentation/pages/show_pet_page";
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
+    { title: "Happy Paw" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  const { getParam } = useQueryParams();
+  const key = getParam("key");
+
+  return  key ?<HomePage />:<ShowPetPage/>;
 }
