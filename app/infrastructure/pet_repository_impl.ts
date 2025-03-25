@@ -1,12 +1,44 @@
 import type { Pet } from "~/domain/entities/pet";
 import type { PetRepository } from "~/domain/repository/pet_repository";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import type { ResponsePet } from "~/domain/entities/response_pet";
 
 export class PetRepositoryImpl implements PetRepository {
   private readonly createPetEndpoint =
     "https://mm3ludb6x4.execute-api.us-east-1.amazonaws.com/default/CreateClient";
-  private readonly imageUploadEndpoint = "https://happypawvet.s3.amazonaws.com";
+    private readonly getPetByUnique = "https://mm3ludb6x4.execute-api.us-east-1.amazonaws.com/default/CreateClient?Key=";
+  private readonly s3Client: S3Client;
+  private readonly bucketName = import.meta.env.VITE_AWS_S3_BUCKET_NAME;
 
-  // Método para crear un nuevo registro de mascota
+  constructor() {
+    this.s3Client = new S3Client({
+      region: import.meta.env.VITE_AWS_REGION,
+      credentials: {
+        accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+        secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+      },
+    });
+  }
+  async getByUniqueKey(key: string): Promise<ResponsePet> {
+    try {
+      const response = await fetch(`${this.getPetByUnique}${key}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error al obtener la mascota: ${response.statusText}`);
+      }
+  
+      const data: ResponsePet = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error en getByUniqueKey:", error);
+      throw error;
+    }
+  }
   async createPet(petData: Pet): Promise<boolean> {
     try {
       const response = await fetch(this.createPetEndpoint, {
@@ -21,7 +53,6 @@ export class PetRepositoryImpl implements PetRepository {
         throw new Error(`Error al crear la mascota: ${response.statusText}`);
       }
 
-      // Si la respuesta es exitosa, retornamos true
       return true;
     } catch (error) {
       console.error("Error en createPet:", error);
@@ -29,31 +60,22 @@ export class PetRepositoryImpl implements PetRepository {
     }
   }
 
-  // Método para subir una imagen
-  async uploadImage(image: File, code: string): Promise<string> {
+  async uploadImage(image: File, code: string, type: string): Promise<string> {
     try {
-      // Construye el nombre del archivo usando el `code` y la extensión del archivo
-      const fileExtension = image.name.split('.').pop(); // Obtiene la extensión del archivo (ej: "jpg", "png")
-      const fileName = `${code}.${fileExtension}`; // Nombre del archivo: "code.ext"
-  
-      // Modifica la URL pre-firmada para incluir el nombre del archivo
-      const presignedUrl = `${this.imageUploadEndpoint}/${fileName}`;
-  
-      // Sube la imagen usando fetch
-      const response = await fetch(presignedUrl, {
-        method: "PUT", // Usa PUT para subir archivos a S3 con una URL pre-firmada
-        body: image, // Envía el archivo directamente
-        headers: {
-          "Content-Type": image.type, // Asegúrate de enviar el tipo de contenido correcto
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Error al subir la imagen: ${response.statusText}`);
-      }
-  
-      // Retorna la URL completa del archivo en S3
-      return presignedUrl.split('?')[0]; // Elimina los parámetros de la URL pre-firmada
+      const fileExtension = image.name.split('.').pop();
+      const fileName = `${code}_${type}.${fileExtension}`;
+      
+      const params = {
+        Bucket: this.bucketName,
+        Key: fileName,
+        Body: image,
+        ContentType: image.type,
+      };
+
+      await this.s3Client.send(new PutObjectCommand(params));
+
+      // Retorna la URL pública del archivo
+      return `https://${this.bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
     } catch (error) {
       console.error("Error en uploadImage:", error);
       throw error;

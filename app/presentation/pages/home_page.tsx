@@ -131,18 +131,20 @@ const HomePage: React.FC = () => {
       }
   
       // Subir la imagen X y obtener su URL
-      const imageXUrl = await uploadImageUseCase.execute(images.x, formData.codigoUnico);
+      const imagePhoto = await uploadImageUseCase.execute(images.x, formData.codigoUnico, "photo");
+      const imageVaccine = await uploadImageUseCase.execute(images.x, formData.codigoUnico, "vaccine");
+      const imageOther = await uploadImageUseCase.execute(images.x, formData.codigoUnico, "other");
   
       // Crear el objeto con los datos del formulario y la URL de la imagen X
       const petData = {
-        activationStatus: "Active", // Puedes ajustar este valor según sea necesario
-        ActivateDate: new Date().toISOString(), // Fecha de activación actual
+        activationStatus: "active",
+        ActivateDate: new Date().toISOString(),
         email: formData.email,
         fullNameOwner: formData.nombrePropietario,
         fullNamePet: formData.nombreMascota,
-        phone: parseInt(formData.celular, 10), // Convertir el teléfono a número
+        phone: parseInt(formData.celular, 10),
         productCode: formData.codigoUnico,
-        url: imageXUrl, // Usar la URL de la imagen X
+        urls: [imagePhoto, imageVaccine, imageOther],
       };
   
       // Crear la mascota usando el caso de uso
