@@ -62,23 +62,42 @@ export class PetRepositoryImpl implements PetRepository {
 
   async uploadImage(image: File, code: string, type: string): Promise<string> {
     try {
-      const fileExtension = image.name.split('.').pop();
-      const fileName = `${code}_${type}.${fileExtension}`;
+      if (!this.bucketName) {
+        throw new Error("El nombre del bucket S3 no está configurado");
+      }
+  
+      // 1. Obtener el ArrayBuffer directamente del File
+      const arrayBuffer = await image.arrayBuffer();
       
+      // 2. Crear Uint8Array desde ArrayBuffer (alternativa a Buffer)
+      const uint8Array = new Uint8Array(arrayBuffer);
+  
+      // 3. Generar nombre de archivo
+      const fileExtension = image.name.split('.').pop() || 'jpg';
+      const fileName = `pets/${code}_${type}_${Date.now()}.${fileExtension}`;
+  
+      // 4. Configurar parámetros para S3
       const params = {
         Bucket: this.bucketName,
         Key: fileName,
-        Body: image,
+        Body: uint8Array, // Usamos Uint8Array directamente
         ContentType: image.type,
+        ACL: 'public-read',
+        Metadata: {
+          'uploaded-by': 'web-app',
+          'pet-code': code
+        }
       };
-
-      await this.s3Client.send(new PutObjectCommand(params));
-
-      // Retorna la URL pública del archivo
-      return `https://${this.bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+  
+      // 5. Subir a S3
+      const command = new PutObjectCommand(params);
+      await this.s3Client.send(command);
+  
+      // 6. Retornar URL pública
+      return `https://${this.bucketName}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${fileName}`;
     } catch (error) {
       console.error("Error en uploadImage:", error);
-      throw error;
+      throw new Error(`Error al subir imagen: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     }
   }
 }

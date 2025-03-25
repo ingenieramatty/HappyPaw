@@ -144,7 +144,9 @@ const HomePage: React.FC = () => {
         fullNamePet: formData.nombreMascota,
         phone: parseInt(formData.celular, 10),
         productCode: formData.codigoUnico,
-        urls: [imagePhoto, imageVaccine, imageOther],
+        urls: [imagePhoto,
+           imageVaccine, imageOther
+          ],
       };
   
       // Crear la mascota usando el caso de uso
@@ -220,7 +222,7 @@ const HomePage: React.FC = () => {
         <ActionButtons
           showNext={currentStep < 3} // Mostrar "Siguiente" si no es la última etapa
           showBack={currentStep > 1} // Mostrar "Regresar" si no es la primera etapa
-          showFinish={false} // No mostrar "Finalizar" en etapas anteriores
+          showFinish={currentStep === 3} // No mostrar "Finalizar" en etapas anteriores
           onNext={handleNext}
           onBack={handleBack}
           onFinish={handleSubmit} // Usar handleSubmit para el botón "Finalizar"

@@ -25,10 +25,7 @@ const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 text-sm font-medium px-4 py-2 rounded-full mb-3">
-            <FaPaw className="text-indigo-600" />
-            <span>Mascota Registrada</span>
-          </div>
+         
           <h1 className="text-4xl font-bold text-indigo-900 mb-2">
             {petData.fullNamePet}
           </h1>
@@ -41,6 +38,7 @@ const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
         {/* Main Content */}
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Owner Information Section */}
+          <div className="grid grid-cols-2"> 
           <div className="bg-white p-8 rounded-2xl shadow-lg w-full lg:w-2/5">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
@@ -90,27 +88,32 @@ const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
                 </div>
               </div>
             </div>
+            </div>
+            {/* Main Featured Image */}
+            <div className="w-full h-full p-4 rounded-2xl relative">
+  {/* Contenedor de imagen que ocupa todo el espacio disponible */}
+  <div className="w-full h-full rounded-xl overflow-hidden">
+    <img
+      src={petData.urls[selectedImage]}
+      alt={`Imagen principal de ${petData.fullNamePet}`}
+      className="w-full h-full object-cover object-center"
+    />
+  </div>
+  
+  {/* Badge inferior izquierdo */}
+  <div className="absolute bottom-4 left-4 bg-white/90 px-3 py-2 rounded-lg shadow-sm">
+    <p className="font-semibold text-gray-800">{petData.fullNamePet}</p>
+    <div className="flex items-center gap-1 text-sm">
+      <span className={`w-2 h-2 rounded-full ${petData.activationStatus === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></span>
+      <span>{petData.activationStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
+    </div>
+  </div>
+</div>
           </div>
 
           {/* Pet Images Section */}
           <div className="w-full lg:w-3/5">
-            {/* Main Featured Image */}
-            <div className="bg-white p-4 rounded-2xl shadow-lg mb-6 relative">
-              <div className="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden">
-                <img
-                  src={petData.urls[selectedImage]}
-                  alt={`Imagen principal de ${petData.fullNamePet}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute bottom-4 left-4 bg-white/90 px-3 py-2 rounded-lg shadow-sm">
-                <p className="font-semibold text-gray-800">{petData.fullNamePet}</p>
-                <div className="flex items-center gap-1 text-sm">
-                  <span className={`w-2 h-2 rounded-full ${petData.activationStatus === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                  <span>{petData.activationStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
-                </div>
-              </div>
-            </div>
+            
 
             {/* Image Gallery */}
             <div className="mb-4 flex items-center gap-2 text-gray-700">
