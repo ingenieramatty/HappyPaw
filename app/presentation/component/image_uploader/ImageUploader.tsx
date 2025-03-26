@@ -7,7 +7,8 @@ interface ImageUploaderProps {
   images: ImageState;
   setImages: React.Dispatch<React.SetStateAction<ImageState>>;
   errors: ImageErrors;
-  setErrors: React.Dispatch<React.SetStateAction<ImageErrors>>; // Asegúrate de incluir setErrors en las props
+  setErrors: React.Dispatch<React.SetStateAction<ImageErrors>>;
+  setHasMinimumImage: React.Dispatch<React.SetStateAction<boolean>>; // Nueva prop
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -15,6 +16,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   setImages,
   errors,
   setErrors,
+  setHasMinimumImage, // Usar la nueva prop
 }) => {
   const [loading, setLoading] = useState<{
     [key in keyof ImageState]: boolean;
@@ -33,15 +35,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     if (file) {
       setLoading((prevLoading) => ({ ...prevLoading, [key]: true }));
 
-      // Simular una carga de imagen (puedes reemplazar esto con una carga real)
       setTimeout(() => {
         setImages((prevImages) => ({
           ...prevImages,
           [key]: file,
         }));
-        setErrors((prevErrors) => ({ ...prevErrors, [key]: "" })); // Limpiar el error al subir la imagen
+        setErrors((prevErrors) => ({ ...prevErrors, [key]: "" }));
         setLoading((prevLoading) => ({ ...prevLoading, [key]: false }));
-      }, 1000); // Simula un retraso de 1 segundo
+        setHasMinimumImage(true); // Informar que hay al menos una imagen
+      }, 1000);
     }
   };
 
@@ -51,7 +53,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       ...prevImages,
       [key]: null,
     }));
-    setErrors((prevErrors) => ({ ...prevErrors, [key]: "Este campo es requerido" })); // Restablecer el error al eliminar la imagen
+    setErrors((prevErrors) => ({ ...prevErrors, [key]: "Este campo es requerido" }));
+
+    // Verificar si quedan imágenes
+    const hasOtherImages = Object.values(images).some(img => img !== null);
+    if (!hasOtherImages) {
+      setHasMinimumImage(false); // Informar que no hay imágenes
+    }
   };
 
   return (
@@ -60,7 +68,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         <ImageUploadField
           label="Foto Mascota"
           id="file-input-x"
-          accept="image/jpeg, image/png" // Solo permitir imágenes
+          accept="image/jpeg, image/png"
           onChange={(e) => handleImageUpload(e, "x")}
           error={errors.x}
           loading={loading.x}
@@ -70,7 +78,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         <ImageUploadField
           label="Foto Vacunas"
           id="file-input-y"
-          accept="image/jpeg, image/png" // Solo permitir imágenes
+          accept="image/jpeg, image/png"
           onChange={(e) => handleImageUpload(e, "y")}
           error={errors.y}
           loading={loading.y}

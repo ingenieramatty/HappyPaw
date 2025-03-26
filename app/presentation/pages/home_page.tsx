@@ -27,6 +27,9 @@ const HomePage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1); // Estado para manejar la etapa actual
   const { getParam } = useQueryParams();
   const key = getParam("key");
+  const [hasMinimumImage, setHasMinimumImage] = useState(false); // Nuevo estado
+
+
 
   // Estado para manejar los datos del formulario
   const [formData, setFormData] = useState<FormData>({
@@ -72,16 +75,14 @@ const HomePage: React.FC = () => {
     // Validar imágenes en el paso 2
     if (currentStep === 2) {
       const imageValidationErrors = validateImages(images);
-      if (Object.keys(imageValidationErrors).length > 0) {
-        setImageErrors(imageValidationErrors);
+      if (!hasMinimumImage) { // Usar el nuevo estado
         Swal.fire({
           icon: "error",
           title: "Imágenes faltantes",
-          text: "Por favor, carga todas las imágenes antes de continuar.",
+          text: "Por favor, carga al menos una imagen antes de continuar.",
         });
         return;
       }
-
       // Enviar la información en el paso 2
       try {
         await handleSubmit();
@@ -205,6 +206,7 @@ const HomePage: React.FC = () => {
               setImages={setImages}
               errors={imageErrors}
               setErrors={setImageErrors}
+              setHasMinimumImage={setHasMinimumImage}
             />
           </div>
         )}
