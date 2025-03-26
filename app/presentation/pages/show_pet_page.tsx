@@ -25,97 +25,100 @@ const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-         
-          <h1 className="text-4xl font-bold text-indigo-900 mb-2">
-            {petData.fullNamePet}
-          </h1>
-          <div className="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-4 py-1 rounded-full">
-            <span className="w-2 h-2 mr-2 bg-green-500 rounded-full"></span>
-            {petData.activationStatus === 'active' ? 'Activo' : 'Inactivo'}
+          <div className="flex flex-col items-center gap-4">
+            <h1 className="text-5xl font-bold text-indigo-900 mb-2 capitalize">
+              {petData.fullNamePet}
+            </h1>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col gap-8">
           {/* Owner Information Section */}
-          <div className="grid grid-cols-2"> 
-          <div className="bg-white p-8 rounded-2xl shadow-lg w-full lg:w-2/5">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
-                <FaIdCard className="text-indigo-600" />
-                Información del Propietario
-              </h2>
-              <p className="text-gray-600 mt-2">Código: {petData.productCode}</p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                  <FaPaw className="text-blue-600" />
-                  Datos personales
-                </h3>
-                <div className="space-y-2">
-                  <p className="text-gray-700">
-                    <span className="font-medium">Nombre completo:</span> {petData.fullNameOwner}
-                  </p>
-                  <p className="text-gray-700 flex items-center gap-1">
-                    <FaCalendarAlt className="text-blue-600" />
-                    <span className="font-medium">Activación:</span> {formattedDate}
-                  </p>
-                </div>
+          <div className="grid grid-cols-2 gap-6">
+            {/* Owner Card */}
+            <div className="bg-white p-8 rounded-2xl shadow-xl">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
+                  <FaIdCard className="text-indigo-600" />
+                  Información del Propietario
+                </h2>
+                <p className="text-gray-600 mt-2">Código: {petData.productCode}</p>
               </div>
 
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                  <FaPhone className="text-blue-600" />
-                  Contacto
-                </h3>
-                <div className="space-y-3">
-                  <a
-                    href={`mailto:${petData.email}`}
-                    className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    <FaEnvelope className="w-5 h-5 mr-2" />
-                    {petData.email}
-                  </a>
-                  <a
-                    href={`tel:${petData.phone}`}
-                    className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    <FaPhone className="w-5 h-5 mr-2" />
-                    {formattedPhone}
-                  </a>
+              <div className="space-y-8">
+                {/* Personal Data */}
+                <div className="bg-blue-50 p-6 rounded-xl">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-2">
+                      <FaPaw className="text-blue-600" />
+                      <h3 className="font-semibold text-gray-700">Datos personales</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <span className="font-medium">Nombre completo:</span> {petData.fullNameOwner}
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <FaCalendarAlt className="text-blue-600" />
+                        <span className="font-medium">Activación:</span> {formattedDate}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Section */}
+                <div className="bg-blue-50 p-6 rounded-xl">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-2">
+                      <FaPhone className="text-blue-600" />
+                      <h3 className="font-semibold text-gray-700">Contacto</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <a
+                        href={`mailto:${petData.email}`}
+                        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        <FaEnvelope className="w-5 h-5" />
+                        {petData.email}
+                      </a>
+                      <a
+                        href={`tel:${petData.phone}`}
+                        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        <FaPhone className="w-5 h-5" />
+                        {formattedPhone}
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            </div>
-            {/* Main Featured Image */}
+
+            {/* Featured Image */}
             <div className="w-full h-full p-4 rounded-2xl relative">
-  {/* Contenedor de imagen que ocupa todo el espacio disponible */}
-  <div className="w-full h-full rounded-xl overflow-hidden">
-    <img
-      src={petData.urls[selectedImage]}
-      alt={`Imagen principal de ${petData.fullNamePet}`}
-      className="w-full h-full object-cover object-center"
-    />
-  </div>
-  
-  {/* Badge inferior izquierdo */}
-  <div className="absolute bottom-4 left-4 bg-white/90 px-3 py-2 rounded-lg shadow-sm">
-    <p className="font-semibold text-gray-800">{petData.fullNamePet}</p>
-    <div className="flex items-center gap-1 text-sm">
-      <span className={`w-2 h-2 rounded-full ${petData.activationStatus === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></span>
-      <span>{petData.activationStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
-    </div>
-  </div>
-</div>
+              <div className="w-full h-full rounded-xl overflow-hidden">
+                <img
+                  src={petData.urls[selectedImage]}
+                  alt={`Imagen principal de ${petData.fullNamePet}`}
+                  className="w-full h-full object-cover object-center transition-all duration-500 hover:scale-105 cursor-pointer"
+                />
+              </div>
+              
+              {/* Badge inferior */}
+              <div className="absolute bottom-4 left-4 bg-white/90 px-4 py-2 rounded-lg shadow-sm backdrop-blur-sm">
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-gray-800">{petData.fullNamePet}</p>
+                  <div className="flex items-center gap-1 text-sm">
+                    <span className={`w-2 h-2 rounded-full ${petData.activationStatus === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                    <span className="text-gray-600">{petData.activationStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Pet Images Section */}
           <div className="w-full lg:w-3/5">
-            
-
-            {/* Image Gallery */}
             <div className="mb-4 flex items-center gap-2 text-gray-700">
               <IoMdImages className="text-xl" />
               <h3 className="font-medium">Galería de imágenes</h3>
@@ -130,7 +133,7 @@ const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
                   <img
                     src={imageUrl}
                     alt={`Imagen ${index + 1} de ${petData.fullNamePet}`}
-                    className="w-full h-24 object-cover rounded-md"
+                    className="w-full h-24 object-cover rounded-md hover:scale-105 transition-transform"
                   />
                 </button>
               ))}

@@ -15,75 +15,78 @@ import type { FormErrors } from "../interface/form_erros";
 import { validateImages } from "../validation/imageValidator";
 import { validateForm } from "../validation/formValidator";
 import Finish from "../component/finish/finish";
+import { FaDog, FaPaw } from "react-icons/fa";
+import { motion } from "framer-motion";
 
-// Crear una instancia del repositorio
 const petRepository = new PetRepositoryImpl();
-
-// Crear instancias de los casos de uso
 const createPetUseCase = new CreatePetUseCase(petRepository);
 const uploadImageUseCase = new SaveImagePetUseCase(petRepository);
 
 const HomePage: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState(1); // Estado para manejar la etapa actual
+  const [currentStep, setCurrentStep] = useState(1);
   const { getParam } = useQueryParams();
   const key = getParam("key");
-  const [hasMinimumImage, setHasMinimumImage] = useState(false); // Nuevo estado
+  const [hasMinimumImage, setHasMinimumImage] = useState(false);
 
-
-
-  // Estado para manejar los datos del formulario
   const [formData, setFormData] = useState<FormData>({
-    codigoUnico: key || "", // Código único no editable
-    nombrePropietario: "",
-    nombreMascota: "",
-    email: "",
-    celular: "",
+    codigoUnico: key || "",
+    nombrePropietario: "prueba",
+    nombreMascota: "prueba",
+    email: "prueba@gmail.com",
+    celular: "3121234567",
+    imagen: null,
   });
 
-  // Estado para manejar las imágenes
-  const [images, setImages] = useState<ImageState>({
+  const [files, setFiles] = useState<ImageState>({
     x: null,
     y: null,
     z: null,
   });
-
-  // Estado para manejar errores de validación del formulario
+  
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [fileErrors, setFileErrors] = useState<ImageErrors>({});
 
-  // Estado para manejar errores de validación de las imágenes
-  const [imageErrors, setImageErrors] = useState<ImageErrors>({});
+  const handleFinish = () => {
+    // Opción 1: Recarga simple (recomendada para tu caso)
+    window.location.href = window.location.href;
+  }
 
-  // Función para manejar el botón "Siguiente"
   const handleNext = async () => {
-    setFormErrors({}); // Limpiar errores del formulario
-    setImageErrors({}); // Limpiar errores de las imágenes
+    setFormErrors({});
+    setFileErrors({});
 
-    // Validar campos vacíos en el formulario
     if (currentStep === 1) {
       const formValidationErrors = validateForm(formData);
+      
+      if (!formData.imagen) {
+        formValidationErrors.imagen = "La imagen principal es requerida";
+      }
+  
       if (Object.keys(formValidationErrors).length > 0) {
         setFormErrors(formValidationErrors);
         Swal.fire({
           icon: "error",
           title: "Error de validación",
-          text: "Por favor, corrige los errores antes de continuar.",
+          text: "Por favor, completa todos los campos requeridos.",
+          background: '#fff',
+          confirmButtonColor: '#4f46e5',
         });
         return;
       }
     }
 
-    // Validar imágenes en el paso 2
     if (currentStep === 2) {
-      const imageValidationErrors = validateImages(images);
-      if (!hasMinimumImage) { // Usar el nuevo estado
+      if (!hasMinimumImage) {
         Swal.fire({
           icon: "error",
-          title: "Imágenes faltantes",
-          text: "Por favor, carga al menos una imagen antes de continuar.",
+          title: "Documentos faltantes",
+          text: "Por favor, carga al menos un documento antes de continuar.",
+          background: '#fff',
+          confirmButtonColor: '#4f46e5',
         });
         return;
       }
-      // Enviar la información en el paso 2
+
       try {
         await handleSubmit();
         setCurrentStep(currentStep + 1);
@@ -92,51 +95,58 @@ const HomePage: React.FC = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.",
+          text: "Hubo un problema al procesar tu solicitud. Por favor inténtalo nuevamente.",
+          background: '#fff',
+          confirmButtonColor: '#4f46e5',
         });
-        return;
       }
     }
 
-    // Avanzar al siguiente paso si no es el paso 2
     if (currentStep < 3 && currentStep !== 2) {
       setCurrentStep(currentStep + 1);
     }
   };
 
-  // Función para manejar el botón "Regresar"
   const handleBack = () => {
-    setFormErrors({}); // Limpiar errores del formulario
-    setImageErrors({}); // Limpiar errores de las imágenes
+    setFormErrors({});
+    setFileErrors({});
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-  // Función para manejar el envío del formulario
   const handleSubmit = async () => {
-    // Mostrar un modal de carga
-    Swal.fire({
-      title: "Por favor, espere...",
-      text: "Procesando la información...",
-      allowOutsideClick: false, // Evitar que el usuario cierre el modal
-      didOpen: () => {
-        Swal.showLoading(); // Mostrar el spinner de carga
-      },
-    });
-  
     try {
-      // Guardar solo la imagen X
-      if (!images.x) {
-        throw new Error("La imagen X es requerida.");
+      // Validación de archivos
+      if (!files.x && !files.y && !files.z) {
+        throw new Error("Debes cargar al menos un documento (vacunas, historial clínico u otros).");
       }
   
-      // Subir la imagen X y obtener su URL
-      const imagePhoto = await uploadImageUseCase.execute(images.x, formData.codigoUnico, "photo");
-      const imageVaccine = await uploadImageUseCase.execute(images.x, formData.codigoUnico, "vaccine");
-      const imageOther = await uploadImageUseCase.execute(images.x, formData.codigoUnico, "other");
+      if (!formData.imagen) {
+        throw new Error("La foto principal de la mascota es requerida.");
+      }
   
-      // Crear el objeto con los datos del formulario y la URL de la imagen X
+      // Mostrar loader
+      Swal.fire({
+        title: "Procesando información...",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        background: '#fff',
+      });
+  
+      // Subir archivos
+      const uploadOperations = [
+        uploadImageUseCase.execute(formData.imagen, formData.codigoUnico, "photo"),
+        files.x ? uploadImageUseCase.execute(files.x, formData.codigoUnico, "vaccine") : Promise.resolve(null),
+        files.y ? uploadImageUseCase.execute(files.y, formData.codigoUnico, "history") : Promise.resolve(null),
+        files.z ? uploadImageUseCase.execute(files.z, formData.codigoUnico, "other") : Promise.resolve(null)
+      ];
+  
+      const [imagePhoto, imageVaccine, history, imageOther] = await Promise.all(uploadOperations);
+  
+      const urls = [imagePhoto, imageVaccine, history, imageOther].filter(url => url !== null) as string[];
+  
+      // Crear objeto de mascota
       const petData = {
         activationStatus: "active",
         ActivateDate: new Date().toISOString(),
@@ -145,93 +155,108 @@ const HomePage: React.FC = () => {
         fullNamePet: formData.nombreMascota,
         phone: parseInt(formData.celular, 10),
         productCode: formData.codigoUnico,
-        urls: [imagePhoto,
-           imageVaccine, imageOther
-          ],
+        urls
       };
   
-      // Crear la mascota usando el caso de uso
+      // Guardar en base de datos
       const success = await createPetUseCase.execute(petData);
   
-      if (success) {
-        // Cerrar el modal de carga y mostrar un mensaje de éxito
-        Swal.fire({
-          icon: "success",
-          title: "¡Éxito!",
-          text: "La mascota se ha creado y el formulario se ha enviado correctamente.",
-        });
-        console.log("Datos enviados:", petData);
-      } else {
-        throw new Error("Error al crear la mascota.");
+      if (!success) {
+        throw new Error("Error al guardar el registro en la base de datos.");
       }
+  
+      // Mostrar éxito y avanzar al paso 3
+      await Swal.fire({
+        icon: "success",
+        title: "¡Registro exitoso!",
+        text: "La información de tu mascota ha sido guardada correctamente.",
+        background: '#fff',
+        confirmButtonColor: '#4f46e5',
+      });
+  
+      // Actualizar estado para mostrar pantalla final
+      setCurrentStep(3);
+      
+      return success;
     } catch (error) {
       console.error("Error:", error);
-      // Cerrar el modal de carga y mostrar un mensaje de error
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.",
+        text: error instanceof Error ? error.message : "Ocurrió un error inesperado.",
+        background: '#fff',
+        confirmButtonColor: '#4f46e5',
       });
-      throw error; // Relanzar el error para manejarlo en handleNext
+      throw error;
     }
   };
-  
   return (
-    <div className="max-w-4xl mx-auto w-full shadow-lg rounded-lg bg-white p-6 md:p-10 space-y-8">
-    {/* Barra de progreso (Slicer) */}
-    <div className="mb-8">
-      <Slicer currentStep={currentStep} />
-    </div>
-  
-    {/* Contenido del formulario según la etapa actual */}
-    <div className="space-y-8 overflow-hidden">
-      <div
-        key={currentStep}
-        className="transition-all duration-500 ease-in-out transform"
-      >
-        {currentStep === 1 && (
-          <div className="animate-fade-in">
-            <FormComponent
-              formData={formData}
-              setFormData={setFormData}
-              errors={formErrors}
-              setErrors={setFormErrors}
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="max-w-4xl mx-auto w-full bg-white rounded-xl shadow-md overflow-hidden"
+    >
+      {/* Header */}
+      <div className="bg-indigo-600 p-4 text-white">
+        <h1 className="text-2xl font-bold flex items-center justify-center">
+          <FaDog className="mr-2" />
+          Registro de Mascotas
+          <FaPaw className="ml-2" />
+        </h1>
+      </div>
+
+      <div className="p-6 md:p-8 space-y-8">
+        {/* Barra de progreso */}
+        <div className="mb-6">
+          <Slicer currentStep={currentStep} />
+        </div>
+        
+        {/* Contenido principal */}
+        <div className="space-y-8">
+          <motion.div
+            key={currentStep}
+            initial={{ x: currentStep > 1 ? 50 : -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {currentStep === 1 && (
+              <FormComponent
+                formData={formData}
+                setFormData={setFormData}
+                errors={formErrors}
+                setErrors={setFormErrors}
+              />
+            )}
+            
+            {currentStep === 2 && (
+              <ImageUploader
+                images={files}
+                setImages={setFiles}
+                errors={fileErrors}
+                setErrors={setFileErrors}
+                setHasMinimumImage={setHasMinimumImage}
+              />
+            )}
+            
+            {currentStep === 3 && <Finish />}
+          </motion.div>
+        </div>
+        
+        {/* Botones de navegación */}
+        {currentStep <= 3 && (
+          <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+            <ActionButtons
+              showNext={currentStep < 3}
+              showBack={currentStep === 2}
+              showFinish={currentStep === 3}
+              onNext={currentStep === 1 ? handleNext : handleSubmit}
+              onBack={handleBack}
+              onFinish={handleFinish}
             />
           </div>
         )}
-        {currentStep === 2 && (
-          <div className="animate-fade-in">
-            <ImageUploader
-              images={images}
-              setImages={setImages}
-              errors={imageErrors}
-              setErrors={setImageErrors}
-              setHasMinimumImage={setHasMinimumImage}
-            />
-          </div>
-        )}
-        {currentStep === 3 && (
-          <div className="animate-fade-in">
-            <Finish />
-          </div>
-        )}
       </div>
-    </div>
-  
-    {/* Componente de acciones (ActionButtons) */}
-    {currentStep < 3 && (
-      <div className="flex justify-between items-center mt-8">
-        <ActionButtons
-          showNext={currentStep < 3} // Mostrar "Siguiente" si no es la última etapa
-          showBack={currentStep > 1} // Mostrar "Regresar" si no es la primera etapa
-          showFinish={currentStep === 3} // No mostrar "Finalizar" en etapas anteriores
-          onNext={handleNext}
-          onBack={handleBack}
-          onFinish={handleSubmit} // Usar handleSubmit para el botón "Finalizar"
-        />
-      </div>
-    )}
-  </div>
+    </motion.div>
   );
 };
 

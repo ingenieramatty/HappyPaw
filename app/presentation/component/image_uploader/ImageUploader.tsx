@@ -66,7 +66,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     <div className="p-4 w-full items-center justify-center flex flex-col shadow-md rounded-lg">
       <div className="grid grid-cols-3 gap-5 space-y-4">
         <ImageUploadField
-          label="Foto Mascota"
+          label="Vacuna"
           id="file-input-x"
           accept="image/jpeg, image/png"
           onChange={(e) => handleImageUpload(e, "x")}
@@ -76,7 +76,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           onRemove={() => handleRemoveImage("x")}
         />
         <ImageUploadField
-          label="Foto Vacunas"
+          label="Historial clinico"
           id="file-input-y"
           accept="image/jpeg, image/png"
           onChange={(e) => handleImageUpload(e, "y")}

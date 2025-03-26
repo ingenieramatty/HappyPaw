@@ -4,4 +4,5 @@ export interface FormData {
   nombreMascota: string;
   email: string;
   celular: string;
+  imagen: File | null; 
 }
