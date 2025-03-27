@@ -1,0 +1,4 @@
+VITE_AWS_ACCESS_KEY_ID=tu_access_key
+VITE_AWS_SECRET_ACCESS_KEY=tu_secret_access_key
+VITE_AWS_REGION=_tu_region
+VITE_AWS_S3_BUCKET_NAME=name_bucket
