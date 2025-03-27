@@ -30,10 +30,10 @@ const HomePage: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>({
     codigoUnico: key || "",
-    nombrePropietario: "prueba",
-    nombreMascota: "prueba",
-    email: "prueba@gmail.com",
-    celular: "3121234567",
+    nombrePropietario: "",
+    nombreMascota: "",
+    email: "",
+    celular: "",
     imagen: null,
   });
 
