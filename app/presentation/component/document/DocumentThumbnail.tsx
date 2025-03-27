@@ -27,7 +27,7 @@ export const DocumentThumbnail = ({
     link.href = url;
     
     // Forzar la descarga con el atributo download
-    const extension = isPdf ? 'pdf' : url.split('.').pop() || 'jpg';
+    const extension = isPdf ? 'pdf' : url.split('.').pop() ?? 'jpg';
     const fileName = `${petName}_${documentType.replace(/\s+/g, '_')}_${index + 1}.${extension}`;
     link.download = fileName;
     

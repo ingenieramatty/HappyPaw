@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { FaDownload } from "react-icons/fa";
 import { IoMdImages } from "react-icons/io";
 import type { Pet } from "~/domain/entities/pet";
-import { OwnerInfoCard } from "../component/document/OwnerInfoCard";
-import { DocumentViewer } from "../component/document/DocumentViewer";
 import { DocumentThumbnail } from "../component/document/DocumentThumbnail";
+import { DocumentViewer } from "../component/document/DocumentViewer";
+import { OwnerInfoCard } from "../component/document/OwnerInfoCard";
 import { PetStatusBadge } from "../component/document/PetStatusBadge";
 
 
