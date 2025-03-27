@@ -6,5 +6,5 @@
         fullNamePet:string,
         phone:number,
         productCode:string,
-        url:string,
+        urls:string[],
     }

@@ -7,7 +7,8 @@ interface ImageUploaderProps {
   images: ImageState;
   setImages: React.Dispatch<React.SetStateAction<ImageState>>;
   errors: ImageErrors;
-  setErrors: React.Dispatch<React.SetStateAction<ImageErrors>>; // Asegúrate de incluir setErrors en las props
+  setErrors: React.Dispatch<React.SetStateAction<ImageErrors>>;
+  setHasMinimumImage: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -15,6 +16,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   setImages,
   errors,
   setErrors,
+  setHasMinimumImage,
 }) => {
   const [loading, setLoading] = useState<{
     [key in keyof ImageState]: boolean;
@@ -24,8 +26,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     z: false,
   });
 
-  // Función para manejar la carga de imágenes
-  const handleImageUpload = (
+  // Función para manejar la carga de archivos (imágenes o PDFs)
+  const handleFileUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: keyof ImageState
   ) => {
@@ -33,59 +35,65 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     if (file) {
       setLoading((prevLoading) => ({ ...prevLoading, [key]: true }));
 
-      // Simular una carga de imagen (puedes reemplazar esto con una carga real)
       setTimeout(() => {
         setImages((prevImages) => ({
           ...prevImages,
           [key]: file,
         }));
-        setErrors((prevErrors) => ({ ...prevErrors, [key]: "" })); // Limpiar el error al subir la imagen
+        setErrors((prevErrors) => ({ ...prevErrors, [key]: "" }));
         setLoading((prevLoading) => ({ ...prevLoading, [key]: false }));
-      }, 1000); // Simula un retraso de 1 segundo
+        setHasMinimumImage(true);
+      }, 1000);
     }
   };
 
-  // Función para eliminar una imagen
-  const handleRemoveImage = (key: keyof ImageState) => {
+  // Función para eliminar un archivo
+  const handleRemoveFile = (key: keyof ImageState) => {
     setImages((prevImages) => ({
       ...prevImages,
       [key]: null,
     }));
-    setErrors((prevErrors) => ({ ...prevErrors, [key]: "Este campo es requerido" })); // Restablecer el error al eliminar la imagen
+    setErrors((prevErrors) => ({ ...prevErrors, [key]: "Este campo es requerido" }));
+
+    // Verificar si quedan archivos
+    const hasOtherFiles = Object.values(images).some(file => file !== null);
+    if (!hasOtherFiles) {
+      setHasMinimumImage(false);
+    }
   };
 
   return (
     <div className="p-4 w-full items-center justify-center flex flex-col shadow-md rounded-lg">
       <div className="grid grid-cols-3 gap-5 space-y-4">
         <ImageUploadField
-          label="Foto Mascota"
+          label="Vacuna"
           id="file-input-x"
-          accept="image/jpeg, image/png" // Solo permitir imágenes
-          onChange={(e) => handleImageUpload(e, "x")}
+          accept="image/jpeg, image/png, application/pdf" // Añadido PDF
+          onChange={(e) => handleFileUpload(e, "x")}
           error={errors.x}
           loading={loading.x}
-          image={images.x}
-          onRemove={() => handleRemoveImage("x")}
+          file={images.x} // Cambiado de image a file
+          onRemove={() => handleRemoveFile("x")}
         />
         <ImageUploadField
-          label="Foto Vacunas"
+          label="Historial clínico"
           id="file-input-y"
-          accept="image/jpeg, image/png" // Solo permitir imágenes
-          onChange={(e) => handleImageUpload(e, "y")}
+          accept="image/jpeg, image/png, application/pdf" // Añadido PDF
+          onChange={(e) => handleFileUpload(e, "y")}
           error={errors.y}
           loading={loading.y}
-          image={images.y}
-          onRemove={() => handleRemoveImage("y")}
+          file={images.y} // Cambiado de image a file
+          onRemove={() => handleRemoveFile("y")}
         />
         <ImageUploadField
           label="Otros"
           id="file-input-z"
-          accept="image/jpeg, image/png"
-          onChange={(e) => handleImageUpload(e, "z")}
+          accept="image/jpeg, image/png, application/pdf" // Añadido PDF
+          onChange={(e) => handleFileUpload(e, "z")}
           error={errors.z}
           loading={loading.z}
-          image={images.z}
-          onRemove={() => handleRemoveImage("z")}
+          file={images.z} // Cambiado de image a file
+          onRemove={() => handleRemoveFile("z")}
         />
       </div>
     </div>
