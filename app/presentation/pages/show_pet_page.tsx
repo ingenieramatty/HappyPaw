@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaPhone, FaPaw, FaCalendarAlt, FaIdCard } from "react-icons/fa";
+import { FaDownload } from "react-icons/fa";
 import { IoMdImages } from "react-icons/io";
 import type { Pet } from "~/domain/entities/pet";
+import { OwnerInfoCard } from "../component/document/OwnerInfoCard";
+import { DocumentViewer } from "../component/document/DocumentViewer";
+import { DocumentThumbnail } from "../component/document/DocumentThumbnail";
+import { PetStatusBadge } from "../component/document/PetStatusBadge";
+
 
 interface ShowPetPageProps {
   petData: Pet;
 }
 
-const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
+export const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
   const [selectedImage, setSelectedImage] = useState(0);
 
   // Format activation date
@@ -19,6 +24,29 @@ const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
 
   // Format phone number
   const formattedPhone = `+${petData.phone.toString().replace(/(\d{2})(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4')}`;
+
+  // Función para determinar si una URL es PDF
+  const isPdf = (url: string) => url.toLowerCase().endsWith('.pdf');
+
+  // Función para extraer el tipo de documento de la URL
+  const getDocumentType = (url: string): string => {
+    const lowerUrl = url.toLowerCase();
+    if (lowerUrl.includes('photo')) return 'Foto';
+    if (lowerUrl.includes('vaccine')) return 'Vacuna';
+    if (lowerUrl.includes('history')) return 'Historial clinico';
+    if (lowerUrl.includes('other')) return 'Otro';
+    return 'Documento';
+  };
+
+  // Función para descargar archivos
+  const handleDownload = (url: string, filename: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename || 'documento';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -36,106 +64,49 @@ const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
         <div className="flex flex-col gap-8">
           {/* Owner Information Section */}
           <div className="grid grid-cols-2 gap-6">
-            {/* Owner Card */}
-            <div className="bg-white p-8 rounded-2xl shadow-xl">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
-                  <FaIdCard className="text-indigo-600" />
-                  Información del Propietario
-                </h2>
-                <p className="text-gray-600 mt-2">Código: {petData.productCode}</p>
-              </div>
+            <OwnerInfoCard
+              productCode={petData.productCode}
+              fullNameOwner={petData.fullNameOwner}
+              formattedDate={formattedDate}
+              email={petData.email}
+              formattedPhone={formattedPhone}
+            />
 
-              <div className="space-y-8">
-                {/* Personal Data */}
-                <div className="bg-blue-50 p-6 rounded-xl">
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-2">
-                      <FaPaw className="text-blue-600" />
-                      <h3 className="font-semibold text-gray-700">Datos personales</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <span className="font-medium">Nombre completo:</span> {petData.fullNameOwner}
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <FaCalendarAlt className="text-blue-600" />
-                        <span className="font-medium">Activación:</span> {formattedDate}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contact Section */}
-                <div className="bg-blue-50 p-6 rounded-xl">
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-2">
-                      <FaPhone className="text-blue-600" />
-                      <h3 className="font-semibold text-gray-700">Contacto</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <a
-                        href={`mailto:${petData.email}`}
-                        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
-                      >
-                        <FaEnvelope className="w-5 h-5" />
-                        {petData.email}
-                      </a>
-                      <a
-                        href={`tel:${petData.phone}`}
-                        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
-                      >
-                        <FaPhone className="w-5 h-5" />
-                        {formattedPhone}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Featured Image */}
+            {/* Featured Image/PDF */}
             <div className="w-full h-full p-4 rounded-2xl relative">
-              <div className="w-full h-full rounded-xl overflow-hidden">
-                <img
-                  src={petData.urls[selectedImage]}
-                  alt={`Imagen principal de ${petData.fullNamePet}`}
-                  className="w-full h-full object-cover object-center transition-all duration-500 hover:scale-105 cursor-pointer"
-                />
-              </div>
+              <DocumentViewer
+                url={petData.urls[selectedImage]}
+                petName={petData.fullNamePet}
+                documentType={getDocumentType(petData.urls[selectedImage])}
+                isPdf={isPdf(petData.urls[selectedImage])}
+                onDownload={handleDownload}
+              />
               
-              {/* Badge inferior */}
-              <div className="absolute bottom-4 left-4 bg-white/90 px-4 py-2 rounded-lg shadow-sm backdrop-blur-sm">
-                <div className="flex items-center gap-2">
-                  <p className="font-semibold text-gray-800">{petData.fullNamePet}</p>
-                  <div className="flex items-center gap-1 text-sm">
-                    <span className={`w-2 h-2 rounded-full ${petData.activationStatus === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                    <span className="text-gray-600">{petData.activationStatus === 'active' ? 'Activo' : 'Inactivo'}</span>
-                  </div>
-                </div>
-              </div>
+              <PetStatusBadge 
+                petName={petData.fullNamePet}
+                status={petData.activationStatus}
+              />
             </div>
           </div>
 
-          {/* Pet Images Section */}
-          <div className="w-full lg:w-3/5">
+          {/* Pet Documents Section */}
+          <div className="w-full">
             <div className="mb-4 flex items-center gap-2 text-gray-700">
               <IoMdImages className="text-xl" />
-              <h3 className="font-medium">Galería de imágenes</h3>
+              <h3 className="font-medium">Documentos adjuntos</h3>
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              {petData.urls.slice(0, 3).map((imageUrl, index) => (
-                <button
+            <div className="flex flex-row space-x-5  w-full gap-4">
+              {petData.urls.slice(0, petData.urls.length).map((url, index) => (
+                <DocumentThumbnail
                   key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`bg-white p-1 rounded-lg shadow-md hover:shadow-lg transition-all ${selectedImage === index ? 'ring-2 ring-indigo-500' : ''}`}
-                >
-                  <img
-                    src={imageUrl}
-                    alt={`Imagen ${index + 1} de ${petData.fullNamePet}`}
-                    className="w-full h-24 object-cover rounded-md hover:scale-105 transition-transform"
-                  />
-                </button>
+                  url={url}
+                  index={index}
+                  petName={petData.fullNamePet}
+                  documentType={getDocumentType(url)}
+                  isPdf={isPdf(url)}
+                  isSelected={selectedImage === index}
+                  onSelect={setSelectedImage}
+                />
               ))}
             </div>
           </div>
@@ -144,5 +115,3 @@ const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
     </div>
   );
 };
-
-export default ShowPetPage;

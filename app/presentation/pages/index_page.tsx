@@ -4,10 +4,10 @@ import type { ResponsePet } from '~/domain/entities/response_pet';
 import { GetPetByCodeUseCase } from '~/domain/usecases/getPetByCodeUseCase';
 import useQueryParams from '~/hooks/useQueryParams';
 import { PetRepositoryImpl } from '~/infrastructure/pet_repository_impl';
-import ShowPetPage from './show_pet_page';
 import HomePage from './home_page';
 import { FaDog, FaSearch, FaPaw, FaHome } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { ShowPetPage } from './show_pet_page';
 
 const petRepository = new PetRepositoryImpl();
 const getPetByCodeUseCase = new GetPetByCodeUseCase(petRepository);
