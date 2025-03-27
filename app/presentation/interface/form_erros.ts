@@ -3,4 +3,5 @@ export interface FormErrors {
   nombreMascota?: string;
   email?: string;
   celular?: string;
+  imagen?: string;
 }
