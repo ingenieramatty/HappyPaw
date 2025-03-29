@@ -1,13 +1,14 @@
-import { motion } from 'framer-motion';
-import { memo, useEffect, useState } from 'react';
-import { FaDog, FaPaw, FaSearch } from 'react-icons/fa';
-import type { Pet } from '~/domain/entities/pet';
-import type { ResponsePet } from '~/domain/entities/response_pet';
-import { GetPetByCodeUseCase } from '~/domain/usecases/getPetByCodeUseCase';
-import useQueryParams from '~/hooks/useQueryParams';
-import { PetRepositoryImpl } from '~/infrastructure/pet_repository_impl';
-import HomePage from './home_page';
-import { ShowPetPage } from './show_pet_page';
+import { motion } from "framer-motion";
+import { memo, useEffect, useState } from "react";
+import { FaDog, FaPaw, FaSearch } from "react-icons/fa";
+import type { Pet } from "~/domain/entities/pet";
+import type { ResponsePet } from "~/domain/entities/response_pet";
+import { GetPetByCodeUseCase } from "~/domain/usecases/getPetByCodeUseCase";
+import useQueryParams from "~/hooks/useQueryParams";
+import { PetRepositoryImpl } from "~/infrastructure/pet_repository_impl";
+import HomePage from "./home_page";
+import { ShowPetPage } from "./show_pet_page";
+import Logo from "../component/logo/Logo";
 
 const petRepository = new PetRepositoryImpl();
 const getPetByCodeUseCase = new GetPetByCodeUseCase(petRepository);
@@ -19,14 +20,14 @@ const transformPetData = (responsePet: ResponsePet | null): Pet | null => {
 
   const petItem = responsePet.Items[0];
   return {
-    fullNamePet: petItem.fullNamePet || 'Nombre no disponible',
-    fullNameOwner: petItem.fullNameOwner || 'Propietario no disponible',
-    email: petItem.email || 'Email no disponible',
+    fullNamePet: petItem.fullNamePet || "Nombre no disponible",
+    fullNameOwner: petItem.fullNameOwner || "Propietario no disponible",
+    email: petItem.email || "Email no disponible",
     phone: petItem.phone || 3000000000,
-    productCode: petItem.productCode || 'Código no disponible',
+    productCode: petItem.productCode || "Código no disponible",
     ActivateDate: petItem.ActivateDate || new Date().toISOString(),
-    activationStatus: petItem.activationStatus || 'inactive',
-    urls: petItem.urls || ['https://via.placeholder.com/500'],
+    activationStatus: petItem.activationStatus || "inactive",
+    urls: petItem.urls || ["https://via.placeholder.com/500"],
   };
 };
 
@@ -45,7 +46,7 @@ const LoadingSpinner = ({ code }: { code: string | null }) => (
       >
         <FaDog className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16" />
       </motion.div>
-      
+
       {[...Array(4)].map((_, i) => {
         const pawId = `paw-${i}`;
         return (
@@ -53,16 +54,16 @@ const LoadingSpinner = ({ code }: { code: string | null }) => (
             key={pawId}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ 
+            transition={{
               delay: i * 0.2,
               duration: 0.5,
               repeat: Infinity,
-              repeatType: "reverse"
+              repeatType: "reverse",
             }}
             className="absolute text-indigo-400"
             style={{
-              top: `${Math.sin(i * Math.PI / 2) * 30}px`,
-              left: `${Math.cos(i * Math.PI / 2) * 30}px`,
+              top: `${Math.sin((i * Math.PI) / 2) * 30}px`,
+              left: `${Math.cos((i * Math.PI) / 2) * 30}px`,
             }}
           >
             <FaPaw className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
@@ -70,14 +71,14 @@ const LoadingSpinner = ({ code }: { code: string | null }) => (
         );
       })}
     </div>
-    
+
     <p className="text-lg sm:text-xl md:text-2xl font-medium text-indigo-700 text-center">
-      {code ? 'Buscando mascota...' : 'Preparando formulario...'}
+      {code ? "Buscando mascota..." : "Preparando formulario..."}
     </p>
-    
-    <motion.div 
+
+    <motion.div
       initial={{ width: 0 }}
-      animate={{ width: '100%', maxWidth: '200px' }}
+      animate={{ width: "100%", maxWidth: "200px" }}
       transition={{ duration: 1 }}
       className="flex items-center border-b-2 border-indigo-500 py-2"
     >
@@ -93,7 +94,7 @@ const LoadingSpinner = ({ code }: { code: string | null }) => (
 
 const PetSearchPage = memo(() => {
   const { getParam } = useQueryParams();
-  const code = getParam('key');
+  const code = getParam("key");
   const [pet, setPet] = useState<Pet | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -111,7 +112,7 @@ const PetSearchPage = memo(() => {
         const transformedPet = transformPetData(responsePet);
         setPet(transformedPet);
       } catch (err) {
-        console.error('Error fetching pet:', err);
+        console.error("Error fetching pet:", err);
         setPet(null);
       } finally {
         setLoading(false);
@@ -124,22 +125,27 @@ const PetSearchPage = memo(() => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-        {/* Header solo visible cuando hay código */}
-        {code && (
-          <motion.div 
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="flex items-center justify-center mb-6 sm:mb-8"
-          >
-            <FaPaw className="text-indigo-500 text-xl sm:text-2xl mr-2 sm:mr-3" />
-            <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700 flex items-center">
-              Happy Paw
-            </h1>
-            <FaPaw className="text-indigo-500 text-xl sm:text-2xl ml-2 sm:ml-3" />
-          </motion.div>
-        )}
-        
+      <div className="max-w-4xl mx-auto w-full ">
+      <motion.div
+  initial={{ y: -20, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  className="relative flex items-center justify-center my-10" // Contenedor relativo para posicionamiento absoluto del logo
+>
+  {/* Logo posicionado absolutamente a la izquierda */}
+  <div className="absolute left-0">
+    <Logo />
+  </div>
+
+  {/* Texto "Happy Paw" centrado (no afectado por el logo) */}
+  <div className="flex items-center">
+    <FaPaw className="text-indigo-500 text-xl sm:text-2xl mr-2 sm:mr-3" />
+    <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700">
+      Happy Paw
+    </h1>
+    <FaPaw className="text-indigo-500 text-xl sm:text-2xl ml-2 sm:ml-3" />
+  </div>
+</motion.div>
+
         {/* Contenido principal */}
         <div className="transition-all duration-300 ease-in-out">
           {loading ? (

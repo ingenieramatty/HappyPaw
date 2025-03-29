@@ -1,4 +1,4 @@
-import ShowPetPage from "~/presentation/pages/show_pet_page";
+import { ShowPetPage } from "~/presentation/pages/show_pet_page";
 import type { Route } from "./+types/show_pet"; // Define los tipos específicos para ShowPet
 
 export function meta({}: Route.MetaArgs) {

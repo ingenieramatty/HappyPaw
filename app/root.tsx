@@ -21,7 +21,7 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap",
   },
-  { rel: "icon", href: "../public/favicon.ico", type: "image/x-icon" },
+  { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
 ];
 
 // Componente Layout para la estructura básica de la aplicación
@@ -47,16 +47,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <div className="bg-slate-100 h-full w-full flex flex-col">
-      <div className="p-10">
-      <img
-        src="../public/logo.png"
-        alt="Logo de la aplicación"
-        className="h-auto mx-auto w-24 "
-        onError={(e) => {
-          e.currentTarget.src = "/fallback-image.jpg";
-        }}
-      />
-      </div>
       <Outlet />
     </div>
   );

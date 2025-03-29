@@ -48,10 +48,10 @@ export const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-100 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center my-4">
           <div className="flex flex-col items-center gap-4">
             <h1 className="text-5xl font-bold text-indigo-900 mb-2 capitalize">
               {petData.fullNamePet}
