@@ -29,38 +29,39 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
     onRemove();
     if (setError) setError("");
   };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
-    if (file) {
-      const acceptedTypes = accept.split(",").map((type) => type.trim());
-      const fileType = file.type;
-      const isImage = fileType.startsWith('image/');
-      const isPDF = fileType === 'application/pdf';
-      
-      if (!isImage && !isPDF) {
-        if (setError) setError("Tipo de archivo no válido. Solo se permiten imágenes (JPEG, PNG) o PDF.");
-        return;
-      }
-
-      // Validación adicional para imágenes si es necesario
-      if (isImage && !acceptedTypes.includes(fileType)) {
-        if (setError) setError("Tipo de imagen no válido. Formatos aceptados: JPEG, PNG.");
-        return;
-      }
-
-      const maxSize = 2 * 1024 * 1024;
-      if (file.size > maxSize) {
-        if (setError) setError("El archivo no debe exceder los 2 MB.");
-        return;
-      }
-
-      if (setError) setError("");
+    
+    if (!file) return;
+  
+    const acceptedTypes = accept.split(",").map(type => type.trim());
+    const fileType = file.type;
+    const isImage = fileType.startsWith('image/');
+    const isPDF = fileType === 'application/pdf';
+  
+    // Validación de tipo
+    if (!isImage && !isPDF) {
+      if (setError) setError("Tipo de archivo no válido. Solo se permiten imágenes (JPEG, PNG) o PDF.");
+      return;
     }
-
+  
+    // Validación de formato específico para imágenes
+    if (isImage && !acceptedTypes.includes(fileType)) {
+      if (setError) setError("Tipo de imagen no válido. Formatos aceptados: JPEG, PNG.");
+      return;
+    }
+  
+    // Validación de tamaño
+    const maxSize = 2 * 1024 * 1024;
+    if (file.size > maxSize) {
+      if (setError) setError("El archivo no debe exceder los 2 MB.");
+      return;
+    }
+  
+    if (setError) setError("");
     onChange(e);
   };
+  
 
   const isPDF = file?.type === 'application/pdf';
   const isImage = file?.type.startsWith('image/');

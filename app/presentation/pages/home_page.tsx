@@ -1,22 +1,21 @@
+import { motion } from "framer-motion";
 import React, { useState } from "react";
-import type { ImageState } from "../interface/image_state";
-import type { FormData } from "../interface/form_data";
-import type { ImageErrors } from "../interface/image_errors";
-import Slicer from "../component/slicer/Slicer";
-import FormComponent from "../component/form_component/FormComponent";
-import ImageUploader from "../component/image_uploader/ImageUploader";
-import ActionButtons from "../component/action_button/ActionsButton";
-import useQueryParams from "~/hooks/useQueryParams";
+import { FaDog, FaPaw } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { PetRepositoryImpl } from "~/infrastructure/pet_repository_impl";
 import { CreatePetUseCase } from "~/domain/usecases/createPetUseCase";
 import { SaveImagePetUseCase } from "~/domain/usecases/saveImagePetUseCase";
-import type { FormErrors } from "../interface/form_erros";
-import { validateImages } from "../validation/imageValidator";
-import { validateForm } from "../validation/formValidator";
+import useQueryParams from "~/hooks/useQueryParams";
+import { PetRepositoryImpl } from "~/infrastructure/pet_repository_impl";
+import ActionButtons from "../component/action_button/ActionsButton";
 import Finish from "../component/finish/finish";
-import { FaDog, FaPaw } from "react-icons/fa";
-import { motion } from "framer-motion";
+import FormComponent from "../component/form_component/FormComponent";
+import ImageUploader from "../component/image_uploader/ImageUploader";
+import Slicer from "../component/slicer/Slicer";
+import type { FormData } from "../interface/form_data";
+import type { FormErrors } from "../interface/form_erros";
+import type { ImageErrors } from "../interface/image_errors";
+import type { ImageState } from "../interface/image_state";
+import { validateForm } from "../validation/formValidator";
 
 const petRepository = new PetRepositoryImpl();
 const createPetUseCase = new CreatePetUseCase(petRepository);
@@ -47,8 +46,7 @@ const HomePage: React.FC = () => {
   const [fileErrors, setFileErrors] = useState<ImageErrors>({});
 
   const handleFinish = () => {
-    // Opción 1: Recarga simple (recomendada para tu caso)
-    window.location.href = window.location.href;
+    window.location.reload();
   }
 
   const handleNext = async () => {
@@ -144,7 +142,7 @@ const HomePage: React.FC = () => {
   
       const [imagePhoto, imageVaccine, history, imageOther] = await Promise.all(uploadOperations);
   
-      const urls = [imagePhoto, imageVaccine, history, imageOther].filter(url => url !== null) as string[];
+      const urls = [imagePhoto, imageVaccine, history, imageOther].filter(url => url !== null);
   
       // Crear objeto de mascota
       const petData = {
@@ -192,71 +190,72 @@ const HomePage: React.FC = () => {
   };
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="max-w-4xl mx-auto w-full bg-white rounded-xl shadow-md overflow-hidden"
-    >
-      {/* Header */}
-      <div className="bg-indigo-600 p-4 text-white">
-        <h1 className="text-2xl font-bold flex items-center justify-center">
-          <FaDog className="mr-2" />
-          Registro de Mascotas
-          <FaPaw className="ml-2" />
-        </h1>
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="max-w-4xl mx-auto w-full bg-white rounded-xl shadow-md overflow-hidden"
+  >
+    {/* Header */}
+    <div className="bg-indigo-600 p-4 text-white">
+      <h1 className="text-2xl md:text-3xl font-bold flex items-center justify-center">
+        <FaDog className="mr-2" />
+        Registro de Mascotas
+        <FaPaw className="ml-2" />
+      </h1>
+    </div>
+  
+    <div className="p-6 md:p-8 space-y-8">
+      {/* Barra de progreso */}
+      <div className="mb-6">
+        <Slicer currentStep={currentStep} />
       </div>
-
-      <div className="p-6 md:p-8 space-y-8">
-        {/* Barra de progreso */}
-        <div className="mb-6">
-          <Slicer currentStep={currentStep} />
-        </div>
-        
-        {/* Contenido principal */}
-        <div className="space-y-8">
-          <motion.div
-            key={currentStep}
-            initial={{ x: currentStep > 1 ? 50 : -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            {currentStep === 1 && (
-              <FormComponent
-                formData={formData}
-                setFormData={setFormData}
-                errors={formErrors}
-                setErrors={setFormErrors}
-              />
-            )}
-            
-            {currentStep === 2 && (
-              <ImageUploader
-                images={files}
-                setImages={setFiles}
-                errors={fileErrors}
-                setErrors={setFileErrors}
-                setHasMinimumImage={setHasMinimumImage}
-              />
-            )}
-            
-            {currentStep === 3 && <Finish />}
-          </motion.div>
-        </div>
-        
-        {/* Botones de navegación */}
-        {currentStep <= 3 && (
-          <div className="flex justify-between items-center pt-6 border-t border-gray-200">
-            <ActionButtons
-              showNext={currentStep < 3}
-              showBack={currentStep === 2}
-              showFinish={currentStep === 3}
-              onNext={currentStep === 1 ? handleNext : handleSubmit}
-              onBack={handleBack}
-              onFinish={handleFinish}
+      
+      {/* Contenido principal */}
+      <div className="space-y-8">
+        <motion.div
+          key={currentStep}
+          initial={{ x: currentStep > 1 ? 50 : -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          {currentStep === 1 && (
+            <FormComponent
+              formData={formData}
+              setFormData={setFormData}
+              errors={formErrors}
+              setErrors={setFormErrors}
             />
-          </div>
-        )}
+          )}
+          
+          {currentStep === 2 && (
+            <ImageUploader
+              images={files}
+              setImages={setFiles}
+              errors={fileErrors}
+              setErrors={setFileErrors}
+              setHasMinimumImage={setHasMinimumImage}
+            />
+          )}
+          
+          {currentStep === 3 && <Finish />}
+        </motion.div>
       </div>
-    </motion.div>
+      
+      {/* Botones de navegación */}
+      {currentStep <= 3 && (
+        <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-200 gap-4">
+          <ActionButtons
+            showNext={currentStep < 3}
+            showBack={currentStep === 2}
+            showFinish={currentStep === 3}
+            onNext={currentStep === 1 ? handleNext : handleSubmit}
+            onBack={handleBack}
+            onFinish={handleFinish}
+          />
+        </div>
+      )}
+    </div>
+  </motion.div>
+  
   );
 };
 

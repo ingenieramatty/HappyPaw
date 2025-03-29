@@ -31,12 +31,6 @@ export const DocumentThumbnail = ({
     const fileName = `${petName}_${documentType.replace(/\s+/g, '_')}_${index + 1}.${extension}`;
     link.download = fileName;
     
-    // Configurar para abrir en nueva pestaña si es PDF
-    if (isPdf) {
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-    }
-    
     // Añadir al DOM, hacer click y luego remover
     document.body.appendChild(link);
     link.click();
@@ -45,18 +39,15 @@ export const DocumentThumbnail = ({
 
   return (
     <div 
-      className={`bg-white rounded-lg shadow-md hover:shadow-lg transition-all overflow-hidden ${isSelected ? 'ring-2 ring-indigo-500' : ''}`}
+      className={`bg-white rounded-lg shadow-md  transition-all overflow-hidden`}
       style={{ width: '200px', height: '220px' }}
     >
       <div 
-        onClick={() => onSelect(index)}
-        className="w-full h-full flex flex-col items-center p-3 cursor-pointer group"
+        className="w-full h-full flex flex-col items-center p-3 group"
       >
         <div className="relative w-full h-32 flex items-center justify-center bg-gray-50 rounded-md">
           {isPdf ? (
-            <div className="flex flex-col items-center justify-center h-full">
-              <FaFilePdf className="text-red-500 text-4xl" />
-            </div>
+            <FaFilePdf className="text-red-500 text-4xl" />
           ) : (
             <img
               src={url}
@@ -75,7 +66,7 @@ export const DocumentThumbnail = ({
           <button 
             onClick={handleDownload}
             className="mt-2 text-indigo-600 hover:text-indigo-800 flex items-center justify-center gap-1 text-xs w-full
-                       px-2 py-1 rounded hover:bg-indigo-50 transition-colors duration-200"
+                       px-2 py-1 rounded hover:bg-indigo-50 transition-colors duration-200 cursor-pointer"
             title={`Descargar ${isPdf ? 'PDF' : 'imagen'}`}
           >
             <FaDownload size={12} className="group-hover:scale-110 transition-transform" />

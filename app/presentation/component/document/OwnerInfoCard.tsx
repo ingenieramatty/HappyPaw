@@ -16,17 +16,17 @@ export const OwnerInfoCard = ({
   formattedPhone
 }: OwnerInfoCardProps) => {
   return (
-    <div className="bg-white p-8 rounded-2xl shadow-xl">
+    <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
           <FaIdCard className="text-indigo-600" />
           Información del Propietario
         </h2>
         <p className="text-gray-600 mt-2">Código: {productCode}</p>
       </div>
 
-      <div className="space-y-8">
-        <div className="bg-blue-50 p-6 rounded-xl">
+      <div className="space-y-6 md:space-y-8">
+        <div className="bg-blue-50 p-4 md:p-6 rounded-xl">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <FaPaw className="text-blue-600" />
@@ -44,7 +44,7 @@ export const OwnerInfoCard = ({
           </div>
         </div>
 
-        <div className="bg-blue-50 p-6 rounded-xl">
+        <div className="bg-blue-50 p-4 md:p-6 rounded-xl">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <FaPhone className="text-blue-600" />

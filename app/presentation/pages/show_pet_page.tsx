@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { IoMdImages } from "react-icons/io";
 import type { Pet } from "~/domain/entities/pet";
 import { DocumentThumbnail } from "../component/document/DocumentThumbnail";
-import { DocumentViewer } from "../component/document/DocumentViewer";
 import { OwnerInfoCard } from "../component/document/OwnerInfoCard";
 import { PetStatusBadge } from "../component/document/PetStatusBadge";
+import { CardImagePet } from "../component/document/CardImagePet";
 
 
 interface ShowPetPageProps {
@@ -62,7 +62,7 @@ export const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
         {/* Main Content */}
         <div className="flex flex-col gap-8">
           {/* Owner Information Section */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <OwnerInfoCard
               productCode={petData.productCode}
               fullNameOwner={petData.fullNameOwner}
@@ -73,7 +73,7 @@ export const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
 
             {/* Featured Image/PDF */}
             <div className="w-full h-full p-4 rounded-2xl relative">
-              <DocumentViewer
+              <CardImagePet
                 url={petData.urls[selectedImage]}
                 petName={petData.fullNamePet}
                 documentType={getDocumentType(petData.urls[selectedImage])}
@@ -94,10 +94,10 @@ export const ShowPetPage: React.FC<ShowPetPageProps> = ({ petData }) => {
               <IoMdImages className="text-xl" />
               <h3 className="font-medium">Documentos adjuntos</h3>
             </div>
-            <div className="flex flex-row space-x-5  w-full gap-4">
+            <div className="flex flex-row flex-wrap gap-4">
               {petData.urls.slice(0, petData.urls.length).map((url, index) => (
                 <DocumentThumbnail
-                  key={index}
+                  key={url}
                   url={url}
                   index={index}
                   petName={petData.fullNamePet}

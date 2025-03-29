@@ -63,40 +63,40 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   };
 
   return (
-    <div className="p-4 w-full items-center justify-center flex flex-col shadow-md rounded-lg">
-      <div className="grid grid-cols-3 gap-5 space-y-4">
-        <ImageUploadField
-          label="Vacuna"
-          id="file-input-x"
-          accept="image/jpeg, image/png, application/pdf" // Añadido PDF
-          onChange={(e) => handleFileUpload(e, "x")}
-          error={errors.x}
-          loading={loading.x}
-          file={images.x} // Cambiado de image a file
-          onRemove={() => handleRemoveFile("x")}
-        />
-        <ImageUploadField
-          label="Historial clínico"
-          id="file-input-y"
-          accept="image/jpeg, image/png, application/pdf" // Añadido PDF
-          onChange={(e) => handleFileUpload(e, "y")}
-          error={errors.y}
-          loading={loading.y}
-          file={images.y} // Cambiado de image a file
-          onRemove={() => handleRemoveFile("y")}
-        />
-        <ImageUploadField
-          label="Otros"
-          id="file-input-z"
-          accept="image/jpeg, image/png, application/pdf" // Añadido PDF
-          onChange={(e) => handleFileUpload(e, "z")}
-          error={errors.z}
-          loading={loading.z}
-          file={images.z} // Cambiado de image a file
-          onRemove={() => handleRemoveFile("z")}
-        />
+      <div className="p-4 w-full items-center justify-center flex flex-col shadow-md rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 space-y-4">
+          <ImageUploadField
+            label="Vacuna"
+            id="file-input-x"
+            accept="image/jpeg, image/png, application/pdf"
+            onChange={(e) => handleFileUpload(e, "x")}
+            error={errors.x}
+            loading={loading.x}
+            file={images.x}
+            onRemove={() => handleRemoveFile("x")}
+          />
+          <ImageUploadField
+            label="Historial clínico"
+            id="file-input-y"
+            accept="image/jpeg, image/png, application/pdf"
+            onChange={(e) => handleFileUpload(e, "y")}
+            error={errors.y}
+            loading={loading.y}
+            file={images.y}
+            onRemove={() => handleRemoveFile("y")}
+          />
+          <ImageUploadField
+            label="Otros"
+            id="file-input-z"
+            accept="image/jpeg, image/png, application/pdf"
+            onChange={(e) => handleFileUpload(e, "z")}
+            error={errors.z}
+            loading={loading.z}
+            file={images.z}
+            onRemove={() => handleRemoveFile("z")}
+          />
+        </div>
       </div>
-    </div>
   );
 };
 
