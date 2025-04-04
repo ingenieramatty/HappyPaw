@@ -46,7 +46,6 @@ const NotFounPet = () => {
         asigne un código válido.
       </p>
 
-
       <div className="mt-8 flex gap-2">
         {[...Array(5)].map((_, i) => (
           <motion.div

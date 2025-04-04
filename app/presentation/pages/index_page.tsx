@@ -27,8 +27,9 @@ const transformPetData = (responsePet: ResponsePet | null): Pet | null => {
     phone: petItem.phone || 3000000000,
     productCode: petItem.productCode || "Código no disponible",
     ActivateDate: petItem.ActivateDate || new Date().toISOString(),
-    activationStatus: petItem.activationStatus || "inactive",
+    activationStatus: petItem.activationStatus || 'active',
     urls: petItem.urls || ["https://via.placeholder.com/500"],
+    description: petItem.description ??''
   };
 };
 
@@ -110,6 +111,7 @@ const PetSearchPage = memo(() => {
       try {
         setLoading(true);
         const responsePet = await getPetByCodeUseCase.execute(code);
+        console.log("response", responsePet)
         const transformedPet = transformPetData(responsePet);
         setPet(transformedPet);
       } catch (err) {
@@ -129,8 +131,11 @@ const PetSearchPage = memo(() => {
       return <LoadingSpinner code={code} />;
     }
 
-    if (!pet || (Array.isArray(pet.urls) && pet.urls.length === 0)) {
+    if (!pet) {
       return <NotFounPet />;
+    }
+    if(pet.activationStatus !== "active"){
+      return <HomePage  />;
     }
 
     return (

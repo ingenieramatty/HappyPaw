@@ -34,6 +34,7 @@ const HomePage: React.FC = () => {
     email: "",
     celular: "",
     imagen: null,
+    description :"",
   });
 
   const [files, setFiles] = useState<ImageState>({
@@ -152,7 +153,8 @@ const HomePage: React.FC = () => {
         fullNamePet: formData.nombreMascota,
         phone: parseInt(formData.celular, 10),
         productCode: formData.codigoUnico,
-        urls
+        urls,
+        description:formData.description
       };
   
       // Guardar en base de datos
@@ -187,6 +189,7 @@ const HomePage: React.FC = () => {
       throw error;
     }
   };
+  
   return (
     <motion.div 
     initial={{ opacity: 0 }}

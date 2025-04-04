@@ -7,4 +7,5 @@
         phone:number,
         productCode:string,
         urls:string[],
+        description?:string,
     }

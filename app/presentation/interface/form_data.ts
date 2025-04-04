@@ -5,4 +5,5 @@ export interface FormData {
   email: string;
   celular: string;
   imagen: File | null; 
+  description?: string;
 }

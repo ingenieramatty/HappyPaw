@@ -1,4 +1,11 @@
-import { FaIdCard, FaPaw, FaCalendarAlt, FaPhone, FaEnvelope } from "react-icons/fa";
+import {
+  FaIdCard,
+  FaPaw,
+  FaCalendarAlt,
+  FaPhone,
+  FaEnvelope,
+  FaClipboard,
+} from "react-icons/fa";
 
 interface OwnerInfoCardProps {
   productCode: string;
@@ -6,6 +13,7 @@ interface OwnerInfoCardProps {
   formattedDate: string;
   email: string;
   formattedPhone: string;
+  description: string;
 }
 
 export const OwnerInfoCard = ({
@@ -13,8 +21,10 @@ export const OwnerInfoCard = ({
   fullNameOwner,
   formattedDate,
   email,
-  formattedPhone
+  formattedPhone,
+  description,
 }: OwnerInfoCardProps) => {
+
   return (
     <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl">
       <div className="text-center mb-8">
@@ -34,7 +44,8 @@ export const OwnerInfoCard = ({
             </div>
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-gray-700">
-                <span className="font-medium">Nombre completo:</span> {fullNameOwner}
+                <span className="font-medium">Nombre completo:</span>{" "}
+                {fullNameOwner}
               </div>
               <div className="flex items-center gap-2 text-gray-700">
                 <FaCalendarAlt className="text-blue-600" />
@@ -59,12 +70,25 @@ export const OwnerInfoCard = ({
                 {email}
               </a>
               <a
-                href={`tel:${formattedPhone.replace(/\s+/g, '')}`}
+                href={`tel:${formattedPhone.replace(/\s+/g, "")}`}
                 className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
               >
                 <FaPhone className="w-5 h-5" />
                 {formattedPhone}
               </a>
+            </div>
+          </div>
+        </div>
+        <div className="bg-blue-50 p-4 md:p-6 rounded-xl">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <FaClipboard className="text-blue-600" />
+              <h3 className="font-semibold text-gray-700">Descripcion</h3>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="">{description || "no hay"}</span>
+              </div>
             </div>
           </div>
         </div>
