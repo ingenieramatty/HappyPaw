@@ -144,7 +144,6 @@ const HomePage: React.FC = () => {
   
       const urls = [imagePhoto, imageVaccine, history, imageOther].filter(url => url !== null);
   
-      // Crear objeto de mascota
       const petData = {
         activationStatus: "active",
         ActivateDate: new Date().toISOString(),

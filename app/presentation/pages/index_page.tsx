@@ -9,6 +9,7 @@ import { PetRepositoryImpl } from "~/infrastructure/pet_repository_impl";
 import HomePage from "./home_page";
 import { ShowPetPage } from "./show_pet_page";
 import Logo from "../component/logo/Logo";
+import NotFounPet from "../component/not_found/NotFounPet";
 
 const petRepository = new PetRepositoryImpl();
 const getPetByCodeUseCase = new GetPetByCodeUseCase(petRepository);
@@ -73,7 +74,7 @@ const LoadingSpinner = ({ code }: { code: string | null }) => (
     </div>
 
     <p className="text-lg sm:text-xl md:text-2xl font-medium text-indigo-700 text-center">
-      {code ? "Buscando mascota..." : "Preparando formulario..."}
+      {code ? "Buscando mascota..." : "espere..."}
     </p>
 
     <motion.div
@@ -123,50 +124,49 @@ const PetSearchPage = memo(() => {
     return () => clearTimeout(timer);
   }, [code]);
 
+  const renderContent = () => {
+    if (loading) {
+      return <LoadingSpinner code={code} />;
+    }
+
+    if (!pet || (Array.isArray(pet.urls) && pet.urls.length === 0)) {
+      return <NotFounPet />;
+    }
+
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <ShowPetPage petData={pet} />
+      </motion.div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
-      <div className="max-w-4xl mx-auto w-full ">
-      <motion.div
-  initial={{ y: -20, opacity: 0 }}
-  animate={{ y: 0, opacity: 1 }}
-  className="relative flex items-center justify-center my-10" // Contenedor relativo para posicionamiento absoluto del logo
->
-  {/* Logo posicionado absolutamente a la izquierda */}
-  <div className="absolute left-0">
-    <Logo />
-  </div>
+      <div className="max-w-4xl mx-auto w-full">
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="relative flex items-center justify-center my-10"
+        >
+          <div className="absolute left-0">
+            <Logo />
+          </div>
 
-  {/* Texto "Happy Paw" centrado (no afectado por el logo) */}
-  <div className="flex items-center">
-    <FaPaw className="text-indigo-500 text-xl sm:text-2xl mr-2 sm:mr-3" />
-    <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700">
-      Happy Paw
-    </h1>
-    <FaPaw className="text-indigo-500 text-xl sm:text-2xl ml-2 sm:ml-3" />
-  </div>
-</motion.div>
+          <div className="flex items-center">
+            <FaPaw className="text-indigo-500 text-xl sm:text-2xl mr-2 sm:mr-3" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700">
+              Happy Paw
+            </h1>
+            <FaPaw className="text-indigo-500 text-xl sm:text-2xl ml-2 sm:ml-3" />
+          </div>
+        </motion.div>
 
-        {/* Contenido principal */}
         <div className="transition-all duration-300 ease-in-out">
-          {loading ? (
-            <LoadingSpinner code={code} />
-          ) : pet ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <ShowPetPage petData={pet} />
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <HomePage />
-            </motion.div>
-          )}
+          {renderContent()}
         </div>
       </div>
     </div>
