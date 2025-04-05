@@ -194,7 +194,7 @@ const HomePage: React.FC = () => {
     <motion.div 
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
-    className="max-w-4xl mx-auto w-full bg-white rounded-xl shadow-md overflow-hidden"
+    className="max-w-4xl mx-auto w-full bg-white rounded-xl sm:shadow-md overflow-hidden"
   >
     {/* Header */}
     <div className="bg-indigo-600 p-4 text-white">
@@ -205,7 +205,7 @@ const HomePage: React.FC = () => {
       </h1>
     </div>
   
-    <div className="p-6 md:p-8 space-y-8">
+    <div className="py-6 md:p-8 space-y-8">
       {/* Barra de progreso */}
       <div className="mb-6">
         <Slicer currentStep={currentStep} />

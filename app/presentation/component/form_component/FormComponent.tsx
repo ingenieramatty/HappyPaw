@@ -107,7 +107,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
             name="codigoUnico"
             value={formData.codigoUnico}
             readOnly
-            className="w-full px-4 py-2 bg-white border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            className="w-full px-4 py-4 bg-white border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           />
         </div>
 
@@ -122,7 +122,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
               name="nombrePropietario"
               value={formData.nombrePropietario}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:outline-none ${
+              className={`w-full px-4 py-5 border rounded-md focus:ring-2 focus:outline-none ${
                 errors.nombrePropietario 
                   ? "border-red-500 focus:ring-red-200" 
                   : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
@@ -143,7 +143,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
               name="nombreMascota"
               value={formData.nombreMascota}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:outline-none ${
+              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${
                 errors.nombreMascota 
                   ? "border-red-500 focus:ring-red-200" 
                   : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
@@ -164,7 +164,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:outline-none ${
+              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${
                 errors.email 
                   ? "border-red-500 focus:ring-red-200" 
                   : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
@@ -185,7 +185,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
               name="celular"
               value={formData.celular}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:outline-none ${
+              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${
                 errors.celular 
                   ? "border-red-500 focus:ring-red-200" 
                   : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
@@ -245,7 +245,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:outline-none border-gray-300 focus:ring-blue-200 focus:border-blue-500`}
+                className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none border-gray-300 focus:ring-blue-200 focus:border-blue-500`}
               />
               {errors.celular && (
                 <p className="mt-1 text-sm text-red-600">{errors.celular}</p>

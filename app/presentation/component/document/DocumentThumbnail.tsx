@@ -40,7 +40,7 @@ export const DocumentThumbnail = ({
   return (
     <div 
       className={`bg-white rounded-lg shadow-md  transition-all overflow-hidden`}
-      style={{ width: '200px', height: '220px' }}
+      style={{ width: '180px', height: '220px' }}
     >
       <div 
         className="w-full h-full flex flex-col items-center p-3 group"

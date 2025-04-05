@@ -24,7 +24,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         <button
           type="button"
           onClick={onBack}
-          className="px-4 py-2 bg-gray-500 text-white rounded-md cursor-pointer transition-all duration-300 ease-in-out hover:bg-gray-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:scale-95"
+          className="px-4 py-4 w-36 bg-gray-500 text-white rounded-md cursor-pointer transition-all duration-300 ease-in-out hover:bg-gray-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:scale-95"
         >
           Regresar
         </button>
@@ -37,7 +37,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           <button
             type="button"
             onClick={onNext}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer transition-all duration-300 ease-in-out hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:scale-95"
+            className="px-4 py-4 w-36 bg-blue-500 text-white rounded-md cursor-pointer transition-all duration-300 ease-in-out hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:scale-95"
           >
             Siguiente
           </button>
@@ -48,7 +48,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           <button
             type="button"
             onClick={handleFinalizar}
-            className="px-4 py-2 bg-green-500 text-white rounded-md cursor-pointer transition-all duration-300 ease-in-out hover:bg-green-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-95"
+            className="px-4 py-4 w-36 bg-green-500 text-white rounded-md cursor-pointer transition-all duration-300 ease-in-out hover:bg-green-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-95"
           >
             Finalizar
           </button>

@@ -10,6 +10,7 @@ import HomePage from "./home_page";
 import { ShowPetPage } from "./show_pet_page";
 import Logo from "../component/logo/Logo";
 import NotFounPet from "../component/not_found/NotFounPet";
+import FooterComponent from "../component/footer/FooterComponent";
 
 const petRepository = new PetRepositoryImpl();
 const getPetByCodeUseCase = new GetPetByCodeUseCase(petRepository);
@@ -27,9 +28,9 @@ const transformPetData = (responsePet: ResponsePet | null): Pet | null => {
     phone: petItem.phone || 3000000000,
     productCode: petItem.productCode || "Código no disponible",
     ActivateDate: petItem.ActivateDate || new Date().toISOString(),
-    activationStatus: petItem.activationStatus || 'active',
+    activationStatus: petItem.activationStatus || "active",
     urls: petItem.urls || ["https://via.placeholder.com/500"],
-    description: petItem.description ??''
+    description: petItem.description ?? "",
   };
 };
 
@@ -111,7 +112,6 @@ const PetSearchPage = memo(() => {
       try {
         setLoading(true);
         const responsePet = await getPetByCodeUseCase.execute(code);
-        console.log("response", responsePet)
         const transformedPet = transformPetData(responsePet);
         setPet(transformedPet);
       } catch (err) {
@@ -134,8 +134,8 @@ const PetSearchPage = memo(() => {
     if (!pet) {
       return <NotFounPet />;
     }
-    if(pet.activationStatus !== "active"){
-      return <HomePage  />;
+    if (pet.activationStatus !== "active") {
+      return <HomePage />;
     }
 
     return (
@@ -150,30 +150,33 @@ const PetSearchPage = memo(() => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
-      <div className="max-w-4xl mx-auto w-full">
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="relative flex items-center justify-center my-10"
-        >
-          <div className="absolute left-0">
-            <Logo />
-          </div>
+    <div>
+      <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+        <div className="max-w-4xl mx-auto w-full">
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="relative flex items-center justify-center my-10"
+          >
+            <div className="absolute left-0">
+              <Logo />
+            </div>
 
-          <div className="flex items-center">
-            <FaPaw className="text-indigo-500 text-xl sm:text-2xl mr-2 sm:mr-3" />
-            <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700">
-              Happy Paw
-            </h1>
-            <FaPaw className="text-indigo-500 text-xl sm:text-2xl ml-2 sm:ml-3" />
-          </div>
-        </motion.div>
+            <div className="flex items-center">
+              <FaPaw className="text-indigo-500 text-xl sm:text-2xl mr-2 sm:mr-3" />
+              <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700">
+                Happy Paw
+              </h1>
+              <FaPaw className="text-indigo-500 text-xl sm:text-2xl ml-2 sm:ml-3" />
+            </div>
+          </motion.div>
 
-        <div className="transition-all duration-300 ease-in-out">
-          {renderContent()}
+          <div className="transition-all duration-300 ease-in-out">
+            {renderContent()}
+          </div>
         </div>
       </div>
+        <FooterComponent />
     </div>
   );
 });

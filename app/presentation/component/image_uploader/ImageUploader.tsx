@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import type { ImageState } from "../../interface/image_state";
 import type { ImageErrors } from "../../interface/image_errors";
 import ImageUploadField from "./ImageUploadField";
@@ -26,7 +26,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     z: false,
   });
 
-  // Función para manejar la carga de archivos (imágenes o PDFs)
+  // Refs tipadas correctamente
+  const fileInputRefs = {
+    x: useRef<HTMLInputElement>(null),
+    y: useRef<HTMLInputElement>(null),
+    z: useRef<HTMLInputElement>(null),
+  };
+
   const handleFileUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: keyof ImageState
@@ -47,7 +53,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     }
   };
 
-  // Función para eliminar un archivo
   const handleRemoveFile = (key: keyof ImageState) => {
     setImages((prevImages) => ({
       ...prevImages,
@@ -55,7 +60,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     }));
     setErrors((prevErrors) => ({ ...prevErrors, [key]: "Este campo es requerido" }));
 
-    // Verificar si quedan archivos
+    if (fileInputRefs[key]?.current) {
+      fileInputRefs[key].current!.value = "";
+    }
+
     const hasOtherFiles = Object.values(images).some(file => file !== null);
     if (!hasOtherFiles) {
       setHasMinimumImage(false);
@@ -63,40 +71,43 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   };
 
   return (
-      <div className="p-4 w-full items-center justify-center flex flex-col shadow-md rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 space-y-4">
-          <ImageUploadField
-            label="Vacuna"
-            id="file-input-x"
-            accept="image/jpeg, image/png, application/pdf"
-            onChange={(e) => handleFileUpload(e, "x")}
-            error={errors.x}
-            loading={loading.x}
-            file={images.x}
-            onRemove={() => handleRemoveFile("x")}
-          />
-          <ImageUploadField
-            label="Historial clínico"
-            id="file-input-y"
-            accept="image/jpeg, image/png, application/pdf"
-            onChange={(e) => handleFileUpload(e, "y")}
-            error={errors.y}
-            loading={loading.y}
-            file={images.y}
-            onRemove={() => handleRemoveFile("y")}
-          />
-          <ImageUploadField
-            label="Otros"
-            id="file-input-z"
-            accept="image/jpeg, image/png, application/pdf"
-            onChange={(e) => handleFileUpload(e, "z")}
-            error={errors.z}
-            loading={loading.z}
-            file={images.z}
-            onRemove={() => handleRemoveFile("z")}
-          />
-        </div>
+    <div className="p-4 w-full items-center justify-center flex flex-col shadow-md rounded-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 space-y-4">
+        <ImageUploadField
+          label="Vacuna"
+          id="file-input-x"
+          accept="image/jpeg, image/png, application/pdf"
+          onChange={(e) => handleFileUpload(e, "x")}
+          error={errors.x}
+          loading={loading.x}
+          file={images.x}
+          onRemove={() => handleRemoveFile("x")}
+          inputRef={fileInputRefs.x} // Ref pasada correctamente
+        />
+        <ImageUploadField
+          label="Historial clínico"
+          id="file-input-y"
+          accept="image/jpeg, image/png, application/pdf"
+          onChange={(e) => handleFileUpload(e, "y")}
+          error={errors.y}
+          loading={loading.y}
+          file={images.y}
+          onRemove={() => handleRemoveFile("y")}
+          inputRef={fileInputRefs.y}
+        />
+        <ImageUploadField
+          label="Otros"
+          id="file-input-z"
+          accept="image/jpeg, image/png, application/pdf"
+          onChange={(e) => handleFileUpload(e, "z")}
+          error={errors.z}
+          loading={loading.z}
+          file={images.z}
+          onRemove={() => handleRemoveFile("z")}
+          inputRef={fileInputRefs.z}
+        />
       </div>
+    </div>
   );
 };
 

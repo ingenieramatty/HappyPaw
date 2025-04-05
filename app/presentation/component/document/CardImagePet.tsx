@@ -16,7 +16,7 @@ export const CardImagePet = ({
   onDownload,
 }: DocumentViewerProps) => {
   return (
-    <div className="relative w-full h-full rounded-xl overflow-hidden bg-white flex items-center justify-center">
+    <div className="relative h-72 sm:w-full sm:h-full rounded-xl overflow-hidden bg-white flex items-center justify-center">
       {isPdf ? (
         <div className="flex flex-col items-center p-8 gap-4">
           <FaFilePdf className="text-red-500 text-8xl" />
