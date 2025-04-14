@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import type { ImageState } from "../../interface/image_state";
 import type { ImageErrors } from "../../interface/image_errors";
 import ImageUploadField from "./ImageUploadField";
@@ -9,6 +9,7 @@ interface ImageUploaderProps {
   errors: ImageErrors;
   setErrors: React.Dispatch<React.SetStateAction<ImageErrors>>;
   setHasMinimumImage: React.Dispatch<React.SetStateAction<boolean>>;
+  urls?:string[],
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -17,6 +18,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   errors,
   setErrors,
   setHasMinimumImage,
+  urls
 }) => {
   const [loading, setLoading] = useState<{
     [key in keyof ImageState]: boolean;
@@ -25,14 +27,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     y: false,
     z: false,
   });
-
-  // Refs tipadas correctamente
+  // Refs para inputs de archivo
   const fileInputRefs = {
     x: useRef<HTMLInputElement>(null),
     y: useRef<HTMLInputElement>(null),
     z: useRef<HTMLInputElement>(null),
   };
 
+  // Manejar carga de archivos
   const handleFileUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: keyof ImageState
@@ -53,18 +55,22 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     }
   };
 
+  // Manejar eliminación de archivos
   const handleRemoveFile = (key: keyof ImageState) => {
     setImages((prevImages) => ({
       ...prevImages,
       [key]: null,
     }));
-    setErrors((prevErrors) => ({ ...prevErrors, [key]: "Este campo es requerido" }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [key]: "Este campo es requerido",
+    }));
 
     if (fileInputRefs[key]?.current) {
       fileInputRefs[key].current!.value = "";
     }
 
-    const hasOtherFiles = Object.values(images).some(file => file !== null);
+    const hasOtherFiles = Object.values(images).some((file) => file !== null);
     if (!hasOtherFiles) {
       setHasMinimumImage(false);
     }
@@ -80,9 +86,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           onChange={(e) => handleFileUpload(e, "x")}
           error={errors.x}
           loading={loading.x}
-          file={images.x}
+          file={images.x as File}
           onRemove={() => handleRemoveFile("x")}
-          inputRef={fileInputRefs.x} // Ref pasada correctamente
+          inputRef={fileInputRefs.x}
         />
         <ImageUploadField
           label="Historial clínico"
@@ -91,7 +97,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           onChange={(e) => handleFileUpload(e, "y")}
           error={errors.y}
           loading={loading.y}
-          file={images.y}
+          file={images.y as File}
           onRemove={() => handleRemoveFile("y")}
           inputRef={fileInputRefs.y}
         />
@@ -102,7 +108,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           onChange={(e) => handleFileUpload(e, "z")}
           error={errors.z}
           loading={loading.z}
-          file={images.z}
+          file={images.z as File}
           onRemove={() => handleRemoveFile("z")}
           inputRef={fileInputRefs.z}
         />

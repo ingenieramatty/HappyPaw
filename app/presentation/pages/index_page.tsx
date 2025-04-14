@@ -127,6 +127,7 @@ const PetSearchPage = memo(() => {
   }, [code]);
 
   const renderContent = () => {
+    
     if (loading) {
       return <LoadingSpinner code={code} />;
     }
