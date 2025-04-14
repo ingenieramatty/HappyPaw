@@ -101,7 +101,7 @@ const handleDownload = (url: string, filename: string) => {
         <div className="flex justify-end mt-4">
         <button
           onClick={handleEdit}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition mb-5"
         >
           Editar Mascota
         </button>
