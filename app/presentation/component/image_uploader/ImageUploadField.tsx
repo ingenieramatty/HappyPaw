@@ -92,16 +92,9 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   };
 
   const isPDF = file?.type === 'application/pdf' || file?.name?.endsWith('.pdf');
-  if(isPDF){
 
-    console.log("error pdf", file?.name)
-  } 
   const isImage = file?.type?.startsWith('image/') || 
                  ['jpg', 'jpeg', 'png', 'gif', 'webp'].some(ext => file?.name?.endsWith(`.${ext}`));
-    if(isImage){
-
-      console.log("error", file?.name)
-    } 
 
   return (
     <div className="flex items-center justify-center flex-col">
@@ -178,11 +171,7 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
           </div>
         )}
       </div>
-      {error && (
-        <p className="text-red-500 text-sm mt-2 animate-pulse">
-          {error}
-        </p>
-      )}
+     
     </div>
   );
 };

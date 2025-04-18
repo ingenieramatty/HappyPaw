@@ -42,12 +42,12 @@ const HomePage: React.FC<HomePageProps> = ({ petData, isEditing = false }) => {
 
   const [formData, setFormData] = useState<FormData>({
     codigoUnico: key,
-    nombrePropietario: petData?.fullNameOwner || "",
-    nombreMascota: petData?.fullNamePet || "",
-    email: petData?.email || "",
-    celular: petData?.phone?.toString() || "",
+    nombrePropietario: petData?.fullNameOwner ?? "",
+    nombreMascota: petData?.fullNamePet ?? "",
+    email: petData?.email ?? "",
+    celular: petData?.phone?.toString() ?? "",
     imagen: null,
-    description: petData?.description || "",
+    description: petData?.description ?? "",
   });
 
   const [existingImages, setExistingImages] = useState<{
@@ -103,7 +103,7 @@ const HomePage: React.FC<HomePageProps> = ({ petData, isEditing = false }) => {
         // Función reusable para detectar tipo de archivo
         const getFileDetails = (url: string) => {
           const isPDF = url.toLowerCase().endsWith(".pdf");
-          const fileName = url.split("/").pop() || "file"; // Extrae nombre original
+          const fileName = url.split("/").pop() ?? "file"; // Extrae nombre original
           const mimeType = isPDF ? "application/pdf" : "image/jpeg";
           return { isPDF, fileName, mimeType };
         };
@@ -205,11 +205,11 @@ const HomePage: React.FC<HomePageProps> = ({ petData, isEditing = false }) => {
   const handleSubmit = async () => {
     try {
       // Validación de archivos
-      if (!isEditing && !files.x && !files.y && !files.z) {
+      if (!files.x && !files.y && !files.z) {
         throw new Error("Debes cargar al menos un documento (vacunas, historial clínico u otros).");
       }
   
-      if (!isEditing && !formData.imagen) {
+      if ( !formData.imagen) {
         throw new Error("La foto principal de la mascota es requerida.");
       }
   
