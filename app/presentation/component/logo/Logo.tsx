@@ -1,11 +1,11 @@
 import React from "react";
 
-function Logo() {
+function Logo({ path }: { path?: string }) {
   return (
     <img
-      src="/logo.png"
+      src={path ? path : ""}
       alt="Logo de la aplicación"
-      className="h-auto mx-auto w-24"
+      className="w-full h-24 mx-auto object-cover pb-5"
       onError={(e) => {
         e.currentTarget.src = "/fallback-image.jpg";
       }}

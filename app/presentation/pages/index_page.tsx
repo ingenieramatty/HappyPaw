@@ -30,6 +30,7 @@ const transformPetData = (responsePet: ResponsePet | null): Pet | null => {
     ActivateDate: petItem.ActivateDate || new Date().toISOString(),
     activationStatus: petItem.activationStatus || "active",
     urls: petItem.urls || ["https://via.placeholder.com/500"],
+    client: petItem.client || "",
     description: petItem.description ?? "",
   };
 };
@@ -127,7 +128,7 @@ const PetSearchPage = memo(() => {
   }, [code]);
 
   const renderContent = () => {
-    
+
     if (loading) {
       return <LoadingSpinner code={code} />;
     }
@@ -153,23 +154,17 @@ const PetSearchPage = memo(() => {
   return (
     <div>
       <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
-        <div className="max-w-4xl mx-auto w-full">
+        <div className="mx-auto w-full">
           <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             className="relative flex items-center justify-center my-10"
           >
-            <div className="absolute left-0">
-              <Logo />
-            </div>
 
             <div className="flex items-center">
-              <FaPaw className="text-indigo-500 text-xl sm:text-2xl mr-2 sm:mr-3" />
-              <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700">
-                Happy Paw
-              </h1>
-              <FaPaw className="text-indigo-500 text-xl sm:text-2xl ml-2 sm:ml-3" />
-            </div>
+              <div className="absolute left-0 w-full">
+                {pet?.client && <Logo path={pet?.client} />}
+              </div>   </div>
           </motion.div>
 
           <div className="transition-all duration-300 ease-in-out">
@@ -177,7 +172,7 @@ const PetSearchPage = memo(() => {
           </div>
         </div>
       </div>
-        <FooterComponent />
+      <FooterComponent />
     </div>
   );
 });

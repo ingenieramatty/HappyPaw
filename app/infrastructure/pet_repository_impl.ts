@@ -6,7 +6,7 @@ import type { ResponsePet } from "~/domain/entities/response_pet";
 export class PetRepositoryImpl implements PetRepository {
   private readonly createPetEndpoint =
     "https://mm3ludb6x4.execute-api.us-east-1.amazonaws.com/default/CreateClient";
-    private readonly getPetByUnique = "https://mm3ludb6x4.execute-api.us-east-1.amazonaws.com/default/CreateClient?Key=";
+  private readonly getPetByUnique = "https://mm3ludb6x4.execute-api.us-east-1.amazonaws.com/default/CreateClient?Key=";
   private readonly s3Client: S3Client;
   private readonly bucketName = import.meta.env.VITE_AWS_S3_BUCKET_NAME;
 
@@ -27,11 +27,11 @@ export class PetRepositoryImpl implements PetRepository {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error al obtener la mascota: ${response.statusText}`);
       }
-  
+
       const data: ResponsePet = await response.json();
       return data;
     } catch (error) {
@@ -65,17 +65,17 @@ export class PetRepositoryImpl implements PetRepository {
       if (!this.bucketName) {
         throw new Error("El nombre del bucket S3 no está configurado");
       }
-  
+
       // 1. Obtener el ArrayBuffer directamente del File
       const arrayBuffer = await image.arrayBuffer();
-      
+
       // 2. Crear Uint8Array desde ArrayBuffer (alternativa a Buffer)
       const uint8Array = new Uint8Array(arrayBuffer);
-  
+
       // 3. Generar nombre de archivo
       const fileExtension = image.name.split('.').pop() || 'jpg';
       const fileName = `pets/${code}_${type}_${Date.now()}.${fileExtension}`;
-  
+
       // 4. Configurar parámetros para S3
       const params = {
         Bucket: this.bucketName,
@@ -88,11 +88,11 @@ export class PetRepositoryImpl implements PetRepository {
           'pet-code': code
         }
       };
-  
+
       // 5. Subir a S3
       const command = new PutObjectCommand(params);
       await this.s3Client.send(command);
-  
+
       // 6. Retornar URL pública
       return `https://${this.bucketName}.s3.${import.meta.env.VITE_AWS_REGION}.amazonaws.com/${fileName}`;
     } catch (error) {
