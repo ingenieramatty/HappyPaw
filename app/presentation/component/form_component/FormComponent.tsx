@@ -63,7 +63,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
   // Función para manejar el cambio de archivo de imagen
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
-    
+
     setFormData((prev) => ({ ...prev, imagen: file }));
     setErrors((prev) => ({ ...prev, imagen: validateImage(file) }));
   };
@@ -71,14 +71,14 @@ const FormComponent: React.FC<FormComponentProps> = ({
   // Función para mostrar vista previa de la imagen
   const renderImagePreview = () => {
     if (!formData.imagen) return null;
-    
+
     const imageUrl = URL.createObjectURL(formData.imagen);
     return (
       <div className="mt-4 flex flex-col items-center">
         <div className="relative w-32 h-32 rounded-lg overflow-hidden border-2 border-gray-200">
-          <img 
-            src={imageUrl} 
-            alt="Preview" 
+          <img
+            src={imageUrl}
+            alt="Preview"
             className="w-full h-full object-cover"
             onLoad={() => URL.revokeObjectURL(imageUrl)}
           />
@@ -95,7 +95,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
         Información de la Mascota
       </h2>
-      
+
       <form className="space-y-6">
         {/* Código único */}
         <div className="bg-blue-50 p-4 rounded-lg">
@@ -122,11 +122,10 @@ const FormComponent: React.FC<FormComponentProps> = ({
               name="nombrePropietario"
               value={formData.nombrePropietario}
               onChange={handleChange}
-              className={`w-full px-4 py-5 border rounded-md focus:ring-2 focus:outline-none ${
-                errors.nombrePropietario 
-                  ? "border-red-500 focus:ring-red-200" 
-                  : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
-              }`}
+              className={`w-full px-4 py-5 border rounded-md focus:ring-2 focus:outline-none ${errors.nombrePropietario
+                ? "border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
+                }`}
             />
             {errors.nombrePropietario && (
               <p className="mt-1 text-sm text-red-600">{errors.nombrePropietario}</p>
@@ -143,11 +142,10 @@ const FormComponent: React.FC<FormComponentProps> = ({
               name="nombreMascota"
               value={formData.nombreMascota}
               onChange={handleChange}
-              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${
-                errors.nombreMascota 
-                  ? "border-red-500 focus:ring-red-200" 
-                  : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
-              }`}
+              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${errors.nombreMascota
+                ? "border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
+                }`}
             />
             {errors.nombreMascota && (
               <p className="mt-1 text-sm text-red-600">{errors.nombreMascota}</p>
@@ -164,11 +162,10 @@ const FormComponent: React.FC<FormComponentProps> = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${
-                errors.email 
-                  ? "border-red-500 focus:ring-red-200" 
-                  : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
-              }`}
+              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${errors.email
+                ? "border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
+                }`}
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -185,11 +182,10 @@ const FormComponent: React.FC<FormComponentProps> = ({
               name="celular"
               value={formData.celular}
               onChange={handleChange}
-              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${
-                errors.celular 
-                  ? "border-red-500 focus:ring-red-200" 
-                  : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
-              }`}
+              className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none ${errors.celular
+                ? "border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
+                }`}
             />
             {errors.celular && (
               <p className="mt-1 text-sm text-red-600">{errors.celular}</p>
@@ -202,11 +198,10 @@ const FormComponent: React.FC<FormComponentProps> = ({
           <label className="block text-sm font-medium text-gray-700">
             Imagen de la mascota *
           </label>
-          
+
           <div className="flex items-center justify-center w-full">
-            <label className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer ${
-              errors.imagen ? "border-red-500 bg-red-50" : "border-gray-300 hover:border-blue-500 hover:bg-blue-50"
-            }`}>
+            <label className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer ${errors.imagen ? "border-red-500 bg-red-50" : "border-gray-300 hover:border-blue-500 hover:bg-blue-50"
+              }`}>
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 <svg className="w-8 h-8 mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
@@ -218,39 +213,39 @@ const FormComponent: React.FC<FormComponentProps> = ({
                   PNG, JPG (MAX. 5MB)
                 </p>
               </div>
-              <input 
-                type="file" 
+              <input
+                type="file"
                 name="imagen"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="hidden" 
+                className="hidden"
               />
             </label>
           </div>
-          
+
           {errors.imagen && (
             <p className="mt-1 text-sm text-red-600">{errors.imagen}</p>
           )}
-          
+
           {renderImagePreview()}
         </div>
 
 
-          {/* Descripcion */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Descripcion
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none border-gray-300 focus:ring-blue-200 focus:border-blue-500`}
-              />
-              {errors.celular && (
-                <p className="mt-1 text-sm text-red-600">{errors.celular}</p>
-              )}
-            </div>
+        {/* Datos Adicionales */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Datos Adicionales
+          </label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className={`w-full px-4 py-4 border rounded-md focus:ring-2 focus:outline-none border-gray-300 focus:ring-blue-200 focus:border-blue-500`}
+          />
+          {errors.celular && (
+            <p className="mt-1 text-sm text-red-600">{errors.celular}</p>
+          )}
+        </div>
 
       </form>
     </div>
